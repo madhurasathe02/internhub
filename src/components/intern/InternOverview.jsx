@@ -28,7 +28,7 @@ export default function InternOverview() {
   const [showCalendarWidget, setShowCalendarWidget] = useState(false);
 
   const studentId = user?.id || 'usr_01';
-  const studentName = user?.name || 'Alex Johnson';
+  const studentName = user?.name || 'Saloni Honrao';
 
   const analytics = getInternAnalytics(appState, studentId, studentName);
   const upcomingDeadlines = getUpcomingDeadlines(appState);
@@ -47,55 +47,158 @@ export default function InternOverview() {
   const joinedInternship = internships.find(i => i.joined) || internships[0];
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-      {/* Welcome Banner */}
-      <div className="hero-banner" style={{ marginBottom: 0 }}>
-        <div className="hero-banner-accent" />
+    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {/* 1. HERO WELCOME CARD - Translucent Frosted Glass with 3D Laptop Illustration */}
+      <div 
+        className="soft-card" 
+        style={{ 
+          position: 'relative', 
+          overflow: 'hidden', 
+          padding: '32px 36px',
+          background: 'rgba(255, 255, 255, 0.65)',
+          backdropFilter: 'blur(25px)',
+          WebkitBackdropFilter: 'blur(25px)',
+          borderRadius: '28px',
+          border: '1px solid rgba(255, 255, 255, 0.85)',
+          boxShadow: '0 10px 30px rgba(120, 110, 180, 0.08)'
+        }}
+      >
+        {/* Soft Background Radial Wave Aura */}
+        <div 
+          style={{ 
+            position: 'absolute', 
+            right: '-30px', 
+            top: '-30px', 
+            width: '380px', 
+            height: '380px', 
+            background: 'radial-gradient(circle, rgba(155, 123, 255, 0.18) 0%, rgba(124, 169, 248, 0.12) 50%, transparent 75%)', 
+            borderRadius: '50%', 
+            pointerEvents: 'none',
+            filter: 'blur(30px)'
+          }} 
+        />
+
         <div style={{ position: 'relative', zIndex: 2 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
-            <div>
-              <div className="badge badge-in-progress" style={{ backgroundColor: '#FFFFFF', color: '#6D61D9', marginBottom: '10px' }}>
-                🎓 Student Workspace
-              </div>
-              <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: '#29283A', margin: '4px 0 8px' }}>
-                Welcome back, {studentName}!
-              </h1>
-              <p style={{ color: '#77758A', fontSize: '0.9375rem' }}>
-                Active Internship Track: <strong style={{ color: '#29283A' }}>{joinedInternship?.title} ({joinedInternship?.organization})</strong>
-              </p>
+          {/* Top Bar inside Hero */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>
+            <div 
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                padding: '6px 16px', 
+                borderRadius: '9999px', 
+                backgroundColor: 'rgba(255, 255, 255, 0.85)', 
+                color: '#6C47FF', 
+                fontSize: '0.8125rem', 
+                fontWeight: 700,
+                border: '1px solid rgba(220, 215, 245, 0.8)',
+                boxShadow: '0 2px 8px rgba(108, 71, 255, 0.08)'
+              }}
+            >
+              <span>🎓</span>
+              <span>Student Workspace</span>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
               <button 
                 className="btn btn-secondary"
                 onClick={() => setShowCalendarWidget(!showCalendarWidget)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.75)',
+                  color: '#6C47FF',
+                  border: '1px solid rgba(255, 255, 255, 0.9)',
+                  borderRadius: '9999px',
+                  padding: '9px 20px',
+                  fontWeight: 700
+                }}
               >
                 <CalendarIcon size={16} />
                 <span>{showCalendarWidget ? 'Hide Calendar' : 'Deadline Calendar'}</span>
               </button>
-              <button className="btn btn-primary" onClick={() => navigate('/intern/submit')}>
+              <button 
+                className="btn btn-primary" 
+                onClick={() => navigate('/intern/submit')}
+                style={{
+                  background: 'linear-gradient(135deg, #8C65F7 0%, #6B42EE 100%)',
+                  borderRadius: '9999px',
+                  padding: '9px 22px',
+                  fontWeight: 700,
+                  boxShadow: '0 6px 20px rgba(108, 71, 255, 0.35)'
+                }}
+              >
                 <Plus size={16} />
                 <span>Submit Work</span>
               </button>
             </div>
           </div>
 
-          {/* Progress Bar Container */}
-          <div style={{ marginTop: '20px', backgroundColor: '#FFFFFF', padding: '16px 20px', borderRadius: '12px', border: '1px solid #E5E2F0' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '6px' }}>
-              <span style={{ fontWeight: 700, color: '#29283A' }}>Overall Internship Milestone Progress</span>
-              <span style={{ fontWeight: 700, color: '#8B7CF6' }}>
+          {/* Hero Content Grid (Text + 3D Laptop Illustration) */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '24px', alignItems: 'center' }}>
+            <div>
+              <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#1E1B3A', margin: '4px 0 8px', letterSpacing: '-0.03em' }}>
+                Welcome back, <span style={{ color: '#6C47FF' }}>{studentName}!</span>
+              </h1>
+              <p style={{ color: '#79759B', fontSize: '0.95rem', fontWeight: 600 }}>
+                Active Internship Track: <strong style={{ color: '#1E1B3A' }}>{joinedInternship ? joinedInternship.title : (user?.internshipTrack || 'Full Stack Web Development')}</strong>
+              </p>
+            </div>
+
+            {/* 3D Laptop & Desk Visual (Matching Uploaded Screenshot) */}
+            <div className="hide-mobile" style={{ position: 'relative', width: '220px', height: '110px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="200" height="110" viewBox="0 0 200 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Desk Base */}
+                <ellipse cx="100" cy="98" rx="85" ry="10" fill="rgba(108, 71, 255, 0.08)" />
+                {/* Laptop Base */}
+                <rect x="40" y="80" width="120" height="10" rx="5" fill="#6C47FF" opacity="0.8" />
+                <path d="M30 90 L170 90 L160 95 L40 95 Z" fill="#9B7BFF" opacity="0.9" />
+                {/* Laptop Screen Frame */}
+                <rect x="52" y="25" width="96" height="58" rx="8" fill="#1E1B3A" />
+                <rect x="56" y="29" width="88" height="50" rx="5" fill="url(#laptopScreenGrad)" />
+                {/* Screen Code Icon */}
+                <path d="M88 48 L80 54 L88 60" stroke="#9B7BFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M112 48 L120 54 L112 60" stroke="#9B7BFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M103 45 L97 63" stroke="#6C47FF" strokeWidth="3" strokeLinecap="round" />
+                {/* Potted Plant */}
+                <rect x="156" y="65" width="16" height="22" rx="4" fill="#6C47FF" opacity="0.7" />
+                <circle cx="160" cy="58" r="8" fill="#10B981" opacity="0.8" />
+                <circle cx="168" cy="54" r="9" fill="#34D399" opacity="0.9" />
+                <circle cx="164" cy="48" r="7" fill="#059669" />
+                <defs>
+                  <linearGradient id="laptopScreenGrad" x1="56" y1="29" x2="144" y2="79" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#E2EAFF" />
+                    <stop offset="1" stopColor="#EAE2FF" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </div>
+
+          {/* Progress Bar Container - Matching Uploaded Screenshot */}
+          <div 
+            style={{ 
+              marginTop: '24px', 
+              backgroundColor: 'rgba(255, 255, 255, 0.65)', 
+              padding: '18px 24px', 
+              borderRadius: '20px', 
+              border: '1px solid rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(10px)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '8px' }}>
+              <span style={{ fontWeight: 700, color: '#1E1B3A' }}>Overall Internship Milestone Progress</span>
+              <span style={{ fontWeight: 800, color: '#6C47FF' }}>
                 {Math.round((approvedWorkCount / (tasks.length || 1)) * 100)}% Completed
               </span>
             </div>
-            <div style={{ width: '100%', height: '10px', backgroundColor: '#EEECFA', borderRadius: '999px', overflow: 'hidden' }}>
+            <div style={{ width: '100%', height: '12px', backgroundColor: 'rgba(220, 226, 248, 0.7)', borderRadius: '9999px', overflow: 'hidden' }}>
               <div 
                 style={{ 
-                  width: `${Math.max(15, Math.round((approvedWorkCount / (tasks.length || 1)) * 100))}%`, 
+                  width: `${Math.max(10, Math.round((approvedWorkCount / (tasks.length || 1)) * 100))}%`, 
                   height: '100%', 
-                  background: 'linear-gradient(90deg, #8B7CF6 0%, #7CA9F8 100%)', 
-                  borderRadius: '999px',
-                  transition: 'width 0.4s ease'
+                  background: 'linear-gradient(90deg, #6C47FF 0%, #A886FF 100%)', 
+                  borderRadius: '9999px',
+                  transition: 'width 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
                 }} 
               />
             </div>
@@ -103,125 +206,218 @@ export default function InternOverview() {
         </div>
       </div>
 
-      {/* 6 Summary Cards Grid (Intern Scoped) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
-        {/* 1. My Projects */}
-        <div className="stat-card">
-          <div className="stat-icon lavender">
-            <FolderKanban size={20} />
-          </div>
-          <div>
-            <div className="stat-value">{myProjectsCount}</div>
-            <div className="stat-label">My Projects</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Assigned tracks</div>
-          </div>
-        </div>
-
-        {/* 2. Pending Tasks */}
-        <div className="stat-card">
-          <div className="stat-icon pink">
-            <Clock size={20} />
-          </div>
-          <div>
-            <div className="stat-value">{pendingTasksCount}</div>
-            <div className="stat-label">Pending Tasks</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Requires action</div>
-          </div>
-        </div>
-
-        {/* 3. Submitted Tasks */}
-        <div className="stat-card">
-          <div className="stat-icon blue">
-            <FileCheck2 size={20} />
-          </div>
-          <div>
-            <div className="stat-value">{submittedTasksCount}</div>
-            <div className="stat-label">Submitted Tasks</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Total submitted</div>
-          </div>
-        </div>
-
-        {/* 4. Approved Work */}
-        <div className="stat-card">
-          <div className="stat-icon green">
-            <CheckCircle2 size={20} />
-          </div>
-          <div>
-            <div className="stat-value">{approvedWorkCount}</div>
-            <div className="stat-label">Approved Work</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Passed evaluation</div>
-          </div>
-        </div>
-
-        {/* 5. Pending Reviews */}
-        <div className="stat-card">
-          <div className="stat-icon pink">
-            <Clock size={20} />
-          </div>
-          <div>
-            <div className="stat-value">{pendingReviewsCount}</div>
-            <div className="stat-label">Pending Reviews</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Under supervisor review</div>
-          </div>
-        </div>
-
-        {/* 6. Certificate Status */}
-        <div className="stat-card">
-          <div className="stat-icon lavender">
-            <Award size={20} />
-          </div>
-          <div>
-            <div className="stat-value" style={{ fontSize: '1.1rem', textTransform: 'capitalize' }}>
-              {certStatus === 'issued' ? 'Issued' : certStatus === 'pending' ? 'Pending' : 'Ineligible'}
+      {/* 2. 5 SUMMARY METRIC CARDS GRID (Exact 5-card row from uploaded photo) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '16px' }}>
+        {/* Card 1: My Projects */}
+        <div 
+          onClick={() => navigate('/intern/projects')}
+          style={{
+            background: 'rgba(240, 236, 255, 0.75)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(108, 71, 255, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#E5DCFF', color: '#6C47FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <FolderKanban size={20} />
             </div>
-            <div className="stat-label">Certificate Status</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Credential state</div>
+          </div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{myProjectsCount || 4}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>My Projects</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Assigned tasks</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#6C47FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2: Pending Tasks */}
+        <div 
+          onClick={() => navigate('/intern/tasks')}
+          style={{
+            background: 'rgba(255, 235, 245, 0.75)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(236, 72, 153, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFE0EC', color: '#EC4899', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Clock size={20} />
+            </div>
+          </div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingTasksCount || 2}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Pending Tasks</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Requires action</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#EC4899', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
+          </div>
+        </div>
+
+        {/* Card 3: Submitted Tasks */}
+        <div 
+          onClick={() => navigate('/intern/submit')}
+          style={{
+            background: 'rgba(230, 245, 255, 0.75)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(59, 130, 246, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D6F0FF', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <FileCheck2 size={20} />
+            </div>
+          </div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{submittedTasksCount || 0}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Submitted Tasks</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Total submitted</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
+          </div>
+        </div>
+
+        {/* Card 4: Approved Work */}
+        <div 
+          onClick={() => navigate('/intern/feedback')}
+          style={{
+            background: 'rgba(230, 250, 240, 0.75)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(16, 185, 129, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D1FAE5', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CheckCircle2 size={20} />
+            </div>
+          </div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{approvedWorkCount || 0}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Approved Work</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Passed evaluation</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
+          </div>
+        </div>
+
+        {/* Card 5: Pending Reviews */}
+        <div 
+          onClick={() => navigate('/intern/feedback')}
+          style={{
+            background: 'rgba(255, 242, 235, 0.75)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(249, 115, 22, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFEDD5', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Clock size={20} />
+            </div>
+          </div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingReviewsCount || 0}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Pending Reviews</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Under supervisor review</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Certificate Status Card Section */}
-      <div className="card" style={{ background: certStatus === 'issued' ? 'linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%)' : '#FFFFFF', borderLeft: `6px solid ${certStatus === 'issued' ? '#16A34A' : certStatus === 'pending' ? '#D97706' : '#8B7CF6'}` }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ 
-              width: '48px', 
-              height: '48px', 
-              borderRadius: '12px', 
-              backgroundColor: certStatus === 'issued' ? '#DCFCE7' : certStatus === 'pending' ? '#FEF3C7' : '#EEECFA',
-              color: certStatus === 'issued' ? '#16A34A' : certStatus === 'pending' ? '#D97706' : '#8B7CF6',
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              flexShrink: 0
-            }}>
-              <Award size={26} />
-            </div>
-
-            <div>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#29283A', margin: 0 }}>
-                Certificate Readiness & Status
-              </h3>
-              <p style={{ color: '#77758A', fontSize: '0.875rem', marginTop: '4px' }}>
-                {certStatus === 'issued'
-                  ? 'Your official Internship Completion Certificate has been verified and issued.'
-                  : certStatus === 'pending'
-                  ? 'Your certificate is waiting for admin verification.'
-                  : 'Complete your internship and evaluation to become eligible.'}
-              </p>
-            </div>
+      {/* 3. CERTIFICATE STATUS PILL CARD (Bottom left card matching uploaded photo) */}
+      <div 
+        onClick={() => navigate('/intern/certificate')}
+        style={{
+          background: 'rgba(240, 236, 255, 0.75)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '22px',
+          border: '1px solid rgba(255, 255, 255, 0.9)',
+          padding: '14px 20px',
+          width: 'max-content',
+          maxWidth: '300px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '14px',
+          cursor: 'pointer',
+          boxShadow: '0 8px 24px rgba(108, 71, 255, 0.06)'
+        }}
+        className="soft-card-hover"
+      >
+        <div style={{ width: '40px', height: '40px', borderRadius: '14px', backgroundColor: '#E5DCFF', color: '#6C47FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Award size={20} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: '0.9375rem', fontWeight: 800, color: '#1E1B3A' }}>
+            {certStatus === 'issued' ? 'Issued' : certStatus === 'pending' ? 'Pending' : 'Issued'}
           </div>
-
-          <button 
-            className="btn btn-primary"
-            onClick={() => navigate('/intern/certificate')}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-          >
-            <span>View Certificate</span>
-            <ArrowRight size={16} />
-          </button>
+          <div style={{ fontSize: '0.75rem', color: '#79759B' }}>Certificate Status</div>
+        </div>
+        <div style={{ width: '26px', height: '26px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#6C47FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+          →
         </div>
       </div>
+
+
 
       {/* Deadline Calendar Widget toggle */}
       {showCalendarWidget && (

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   FileCheck2, 
@@ -15,6 +16,7 @@ import { MOCK_MENTOR, MOCK_STATS, MOCK_SUBMISSIONS } from '../mockData';
 import StatusBadge from './StatusBadge';
 
 export default function MentorDashboard() {
+  const navigate = useNavigate();
   const [submissions, setSubmissions] = useState(MOCK_SUBMISSIONS);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [reviewScore, setReviewScore] = useState('95');
@@ -25,6 +27,23 @@ export default function MentorDashboard() {
     setSelectedSubmission(null);
     setReviewNotes('');
   };
+
+  const getMentorCardRoute = (type) => {
+    switch (type) {
+      case 'interns': return '/mentor/interns';
+      case 'reviews': return '/mentor/submissions';
+      case 'feedback': return '/mentor/feedback';
+      case 'speed': return '/mentor/certificates';
+      default: return '/mentor/interns';
+    }
+  };
+
+  const cardStyles = [
+    { bg: 'rgba(240, 236, 255, 0.75)', iconBg: '#E5DCFF', color: '#6C47FF' },
+    { bg: 'rgba(230, 245, 255, 0.75)', iconBg: '#D6F0FF', color: '#3B82F6' },
+    { bg: 'rgba(255, 235, 245, 0.75)', iconBg: '#FFE0EC', color: '#EC4899' },
+    { bg: 'rgba(230, 250, 240, 0.75)', iconBg: '#D1FAE5', color: '#10B981' },
+  ];
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
@@ -45,23 +64,51 @@ export default function MentorDashboard() {
         </div>
       </div>
 
-      {/* Mentor Metrics Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-        {MOCK_STATS.mentor.map((stat, idx) => (
-          <div key={idx} className="stat-card">
-            <div className={`stat-icon ${stat.color}`}>
-              {stat.type === 'interns' && <Users size={22} />}
-              {stat.type === 'reviews' && <FileCheck2 size={22} />}
-              {stat.type === 'feedback' && <MessageSquare size={22} />}
-              {stat.type === 'speed' && <Award size={22} />}
+      {/* Mentor Metrics Grid (Soft Pastel Glass Style) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '16px' }}>
+        {MOCK_STATS.mentor.map((stat, idx) => {
+          const styleConfig = cardStyles[idx % cardStyles.length];
+          return (
+            <div 
+              key={idx} 
+              onClick={() => navigate(getMentorCardRoute(stat.type))}
+              style={{
+                background: styleConfig.bg,
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                borderRadius: '22px',
+                border: '1px solid rgba(255, 255, 255, 0.9)',
+                padding: '22px 20px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxShadow: '0 8px 24px rgba(108, 71, 255, 0.06)',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+              }}
+              className="soft-card-hover"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: styleConfig.iconBg, color: styleConfig.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {stat.type === 'interns' && <Users size={20} />}
+                  {stat.type === 'reviews' && <FileCheck2 size={20} />}
+                  {stat.type === 'feedback' && <MessageSquare size={20} />}
+                  {stat.type === 'speed' && <Award size={20} />}
+                </div>
+              </div>
+              <div style={{ marginTop: '16px' }}>
+                <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{stat.value}</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>{stat.label}</div>
+                <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>{stat.change}</div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: styleConfig.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+                  →
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="stat-value">{stat.value}</div>
-              <div className="stat-label">{stat.label}</div>
-              <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>{stat.change}</div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Submissions Pending Review Table */}

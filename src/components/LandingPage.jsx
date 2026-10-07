@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Sparkles, 
@@ -19,6 +19,7 @@ import {
   Briefcase
 } from 'lucide-react';
 import LandingNavbar from './LandingNavbar';
+import SplashScreen from './SplashScreen';
 import '../styles/LandingPage.css';
 
 const navLinkStyle = {
@@ -35,6 +36,7 @@ const navLinkStyle = {
 
 export default function LandingPage({ onLogin, onRegister }) {
   const navigate = useNavigate();
+  const [showSplash, setShowSplash] = useState(true);
 
   const handleLoginClick = (role = 'student') => {
     const validRole = typeof role === 'string' ? role : 'student';
@@ -55,139 +57,44 @@ export default function LandingPage({ onLogin, onRegister }) {
 
   return (
     <div className="landing-container animate-fade-in">
-      {/* 1. NAVBAR */}
+      {/* 0. INTRO SPLASH SCREEN */}
+      {showSplash && (
+        <SplashScreen 
+          onComplete={() => setShowSplash(false)} 
+          autoDismiss={true} 
+          duration={2500} 
+        />
+      )}
+
+      {/* 1. NAVBAR WITH CENTERED LOGO & SPLASH BACKDROP */}
       <LandingNavbar 
         onGetStarted={() => handleRegisterClick('student')} 
         onLogin={() => handleLoginClick('student')} 
       />
 
-      {/* 2. HERO SECTION */}
-      <section id="hero" className="hero-wrapper">
-        <div className="hero-bg-blobs" />
-        <div className="hero-bg-blob-2" />
+      {/* 2. HERO SECTION WITH SPLASH VIDEO BACKGROUND & CENTERED SCREEN LOGO */}
+      <section id="hero" className="video-hero-wrapper">
+        {/* Background Video */}
+        <video 
+          className="hero-video-bg"
+          src="/splash-video.mp4" 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+        />
+        
+        {/* Soft Contrast Overlay */}
+        <div className="hero-video-overlay" />
 
-        <div className="landing-section">
-          <div className="hero-grid">
-            {/* Left Column */}
-            <div className="hero-content">
-              <div className="hero-tag">
-                <Sparkles size={14} style={{ display: 'inline', marginRight: '6px' }} />
-                INTERNSHIP MANAGEMENT, SIMPLIFIED
-              </div>
-
-              <h1 className="hero-heading">
-                Manage Internships.<br />
-                <span className="hero-heading-highlight">Organize Projects.</span><br />
-                Build Your Future.
-              </h1>
-
-              <p className="hero-description">
-                InternHub brings students, mentors, projects, tasks, submissions, and feedback together in one simple platform.
-              </p>
-
-              <div className="hero-cta-group">
-                <button className="btn btn-primary btn-lg" onClick={() => handleRegisterClick('student')}>
-                  <span>Get Started</span>
-                  <ArrowRight size={18} />
-                </button>
-                <button className="btn btn-secondary btn-lg" onClick={() => handleLoginClick('student')}>
-                  <span>Sign In / Login</span>
-                </button>
-              </div>
-
-              <div className="hero-supporting-text">
-                <CheckCircle2 size={15} style={{ color: '#8B7CF6' }} />
-                <span>One platform for the complete internship workflow.</span>
-              </div>
-            </div>
-
-            {/* Right Column - Mock Dashboard Visual */}
-            <div className="hero-mockup-wrapper">
-              {/* Floating Badge 1 */}
-              <div className="floating-card-1">
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#E4F5EA', color: '#4F9D69', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <CheckCircle2 size={18} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#29283A' }}>Submission Approved</div>
-                  <div style={{ fontSize: '0.6875rem', color: '#77758A' }}>REST API Telemetry • 10m ago</div>
-                </div>
-              </div>
-
-              {/* Floating Badge 2 */}
-              <div className="floating-card-2">
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#EEECFA', color: '#6D61D9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <MessageSquare size={18} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#29283A' }}>Mentor Feedback Added</div>
-                  <div style={{ fontSize: '0.6875rem', color: '#77758A' }}>Grade: A+ (96%)</div>
-                </div>
-              </div>
-
-              {/* Central Mockup Card */}
-              <div className="hero-mockup-card">
-                <div className="mockup-window-bar">
-                  <div className="mockup-dot red" />
-                  <div className="mockup-dot yellow" />
-                  <div className="mockup-dot green" />
-                  <span style={{ fontSize: '0.75rem', color: '#77758A', marginLeft: 'auto', fontWeight: 600 }}>InternHub Dashboard</span>
-                </div>
-
-                <div className="mockup-body">
-                  {/* Mini Sidebar */}
-                  <div className="mockup-sidebar">
-                    <div className="mockup-sidebar-item active">
-                      <Sparkles size={16} />
-                    </div>
-                    <div className="mockup-sidebar-item">
-                      <FolderKanban size={16} />
-                    </div>
-                    <div className="mockup-sidebar-item">
-                      <CheckSquare size={16} />
-                    </div>
-                    <div className="mockup-sidebar-item">
-                      <MessageSquare size={16} />
-                    </div>
-                  </div>
-
-                  {/* Main Content Area */}
-                  <div className="mockup-content">
-                    {/* Header Strip */}
-                    <div className="mockup-header-strip">
-                      <div>
-                        <div style={{ fontSize: '0.8125rem', fontWeight: 800, color: '#29283A' }}>Alex Johnson</div>
-                        <div style={{ fontSize: '0.6875rem', color: '#77758A' }}>Apex Systems • Full Stack Intern</div>
-                      </div>
-                      <span className="badge badge-completed" style={{ fontSize: '0.6875rem' }}>Active Track</span>
-                    </div>
-
-                    {/* Active Project Card */}
-                    <div className="mockup-project-card">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: '#29283A', marginBottom: '6px' }}>
-                        <span>Cloud SaaS Portal</span>
-                        <span style={{ color: '#8B7CF6' }}>78% Complete</span>
-                      </div>
-                      <div style={{ width: '100%', height: '6px', backgroundColor: '#EEECFA', borderRadius: '3px', overflow: 'hidden' }}>
-                        <div style={{ width: '78%', height: '100%', background: 'linear-gradient(90deg, #8B7CF6 0%, #7CA9F8 100%)' }} />
-                      </div>
-                    </div>
-
-                    {/* Task Deliverable Items */}
-                    <div className="mockup-task-item">
-                      <span style={{ fontWeight: 600, color: '#29283A' }}>Soft Lavender UI Tokens</span>
-                      <span className="badge badge-completed" style={{ fontSize: '0.65rem' }}>Completed</span>
-                    </div>
-
-                    <div className="mockup-task-item">
-                      <span style={{ fontWeight: 600, color: '#29283A' }}>Mentor Review Drawer</span>
-                      <span className="badge badge-under-review" style={{ fontSize: '0.65rem' }}>Under Review</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Curved Wave Divider at Bottom of Hero (Matching Reference Design) */}
+        <div className="hero-wave-divider">
+          <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path 
+              d="M0 40C320 90 640 95 960 50C1120 28 1280 20 1440 40V100H0V40Z" 
+              fill="var(--bg-app)" 
+            />
+          </svg>
         </div>
       </section>
 

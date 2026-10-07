@@ -88,47 +88,62 @@ export default function RoleSidebar({ mobileOpen, onCloseMobile }) {
 
   return (
     <aside className={`sidebar ${mobileOpen ? 'mobile-open' : ''}`}>
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-          <div className="sidebar-label" style={{ textTransform: 'uppercase', letterSpacing: '0.06em', paddingLeft: 0 }}>
-            {role === 'admin' ? '🛡️ Admin Workspace' : role === 'mentor' ? '👨‍🏫 Mentor Portal' : '🎓 Intern Workspace'}
-          </div>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <div className="sidebar-label" style={{ textTransform: 'uppercase', letterSpacing: '0.08em', paddingLeft: '6px', color: '#8C87B0', fontSize: '0.72rem', fontWeight: 800 }}>
+              {role === 'admin' ? 'ADMIN WORKSPACE' : role === 'mentor' ? 'MENTOR WORKSPACE' : 'INTERN WORKSPACE'}
+            </div>
 
-          <button 
-            className="icon-btn mobile-toggle-btn"
-            onClick={onCloseMobile}
-            style={{ width: '32px', height: '32px', border: 'none', background: '#EEECFA', color: '#6D61D9' }}
-            aria-label="Close menu drawer"
-          >
-            <X size={16} />
-          </button>
-        </div>
-
-        <nav className="sidebar-nav">
-          {currentNav.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              onClick={handleNavClick}
-              className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
-              style={{ textDecoration: 'none' }}
-            >
-              {item.icon}
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
-
-          <div style={{ borderTop: '1px solid #E5E2F0', marginTop: '10px', paddingTop: '10px' }}>
             <button 
-              className="sidebar-item" 
-              style={{ width: '100%', border: 'none', background: 'transparent', cursor: 'pointer', color: '#77758A' }}
-              onClick={() => { handleNavClick(); navigate('/'); }}
+              className="icon-btn mobile-toggle-btn"
+              onClick={onCloseMobile}
+              style={{ width: '32px', height: '32px', border: 'none', background: 'rgba(238, 236, 250, 0.8)', color: '#6C47FF' }}
+              aria-label="Close menu drawer"
             >
-              <Sparkles size={18} />
-              <span>Landing Page</span>
+              <X size={16} />
             </button>
           </div>
-        </nav>
+
+          <nav className="sidebar-nav">
+            {currentNav.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={handleNavClick}
+                className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
+                style={{ textDecoration: 'none', position: 'relative' }}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+                {item.label === 'Notifications' && (
+                  <span 
+                    style={{ 
+                      width: '8px', 
+                      height: '8px', 
+                      borderRadius: '50%', 
+                      backgroundColor: '#EC4899', 
+                      marginLeft: 'auto',
+                      boxShadow: '0 0 8px rgba(236, 72, 153, 0.5)'
+                    }} 
+                  />
+                )}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+
+        {/* Bottom Landing Page Option & Soft Pastel Leaf Decoration */}
+        <div style={{ marginTop: 'auto', paddingTop: '16px' }}>
+          <button 
+            className="sidebar-item" 
+            style={{ width: '100%', border: 'none', background: 'transparent', cursor: 'pointer', color: '#79759B' }}
+            onClick={() => { handleNavClick(); navigate('/'); }}
+          >
+            <Sparkles size={18} style={{ color: '#6C47FF' }} />
+            <span>Landing Page</span>
+          </button>
+        </div>
       </div>
     </aside>
   );

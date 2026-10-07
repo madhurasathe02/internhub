@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Settings, Save } from 'lucide-react';
+import ChangePasswordCard from '../ChangePasswordCard';
 
 export default function MentorSettings() {
   const [saved, setSaved] = useState(false);
@@ -14,10 +15,10 @@ export default function MentorSettings() {
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       <div>
         <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#29283A', margin: 0 }}>
-          Mentor Preferences & Notification Settings
+          Mentor Preferences & Security Settings
         </h1>
         <p style={{ color: '#77758A', fontSize: '0.9375rem', marginTop: '4px' }}>
-          Configure review notification alerts, office hour availability, and evaluation templates.
+          Configure review notification alerts, account password security, and supervisor preferences.
         </p>
       </div>
 
@@ -54,6 +55,13 @@ export default function MentorSettings() {
           </div>
         </form>
       </div>
+
+      {/* Change Password Option */}
+      <ChangePasswordCard 
+        title="Change Mentor Password" 
+        subtitle="Update your supervisor password to maintain secure portal access"
+      />
     </div>
   );
 }
+

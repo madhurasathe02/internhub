@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   UserCheck, 
@@ -19,6 +20,7 @@ import { useApp } from '../../context/AppContext';
 import { getAdminAnalytics, getSystemActivities } from '../../utils/analyticsHelper';
 
 export default function AdminOverview() {
+  const navigate = useNavigate();
   const appState = useApp();
   const { announcements = [] } = appState;
 
@@ -67,89 +69,257 @@ export default function AdminOverview() {
         </div>
       </div>
 
-      {/* 7 Summary Cards Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-        {/* Card 1: Total Interns/Students */}
-        <div className="stat-card">
-          <div className="stat-icon lavender">
-            <Users size={20} />
+      {/* 7 Summary Cards Grid (Matching Soft Pastel Glass Card Style) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '16px' }}>
+        {/* Card 1: Total Interns */}
+        <div 
+          onClick={() => navigate('/admin/students')}
+          style={{
+            background: 'rgba(240, 236, 255, 0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(108, 71, 255, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#E5DCFF', color: '#6C47FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Users size={20} />
+            </div>
           </div>
-          <div>
-            <div className="stat-value">{totalInterns}</div>
-            <div className="stat-label">Total Interns</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Active student cohort</div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{totalInterns}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Total Interns</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Active student cohort</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#6C47FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
           </div>
         </div>
 
         {/* Card 2: Total Mentors */}
-        <div className="stat-card">
-          <div className="stat-icon blue">
-            <UserCheck size={20} />
+        <div 
+          onClick={() => navigate('/admin/mentors')}
+          style={{
+            background: 'rgba(230, 245, 255, 0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(59, 130, 246, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D6F0FF', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <UserCheck size={20} />
+            </div>
           </div>
-          <div>
-            <div className="stat-value">{totalMentors}</div>
-            <div className="stat-label">Total Mentors</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Faculty & Industry</div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{totalMentors}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Total Mentors</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Faculty & Industry</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
           </div>
         </div>
 
         {/* Card 3: Active Internships */}
-        <div className="stat-card">
-          <div className="stat-icon green">
-            <Briefcase size={20} />
+        <div 
+          onClick={() => navigate('/admin/internships')}
+          style={{
+            background: 'rgba(230, 250, 240, 0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(16, 185, 129, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D1FAE5', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Briefcase size={20} />
+            </div>
           </div>
-          <div>
-            <div className="stat-value">{activeInternships}</div>
-            <div className="stat-label">Active Internships</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Ongoing tracks</div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{activeInternships}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Active Internships</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Ongoing tracks</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
           </div>
         </div>
 
         {/* Card 4: Total Projects */}
-        <div className="stat-card">
-          <div className="stat-icon lavender">
-            <FolderKanban size={20} />
+        <div 
+          onClick={() => navigate('/admin/projects')}
+          style={{
+            background: 'rgba(245, 238, 255, 0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(139, 92, 246, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#EDE5FF', color: '#8B5CF6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <FolderKanban size={20} />
+            </div>
           </div>
-          <div>
-            <div className="stat-value">{totalProjects}</div>
-            <div className="stat-label">Total Projects</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Industry assignments</div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{totalProjects}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Total Projects</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Industry assignments</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#8B5CF6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
           </div>
         </div>
 
         {/* Card 5: Pending Submissions */}
-        <div className="stat-card">
-          <div className="stat-icon pink">
-            <Clock size={20} />
+        <div 
+          onClick={() => navigate('/admin/tasks')}
+          style={{
+            background: 'rgba(255, 235, 245, 0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(236, 72, 153, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFE0EC', color: '#EC4899', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Clock size={20} />
+            </div>
           </div>
-          <div>
-            <div className="stat-value">{pendingSubmissions}</div>
-            <div className="stat-label">Pending Submissions</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Awaiting evaluation</div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingSubmissions}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Pending Submissions</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Awaiting evaluation</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#EC4899', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
           </div>
         </div>
 
         {/* Card 6: Completed Internships */}
-        <div className="stat-card">
-          <div className="stat-icon green">
-            <CheckCircle2 size={20} />
+        <div 
+          onClick={() => navigate('/admin/internships')}
+          style={{
+            background: 'rgba(230, 255, 250, 0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(20, 184, 166, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#CCFBF1', color: '#14B8A6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CheckCircle2 size={20} />
+            </div>
           </div>
-          <div>
-            <div className="stat-value">{completedInternships}</div>
-            <div className="stat-label">Completed Internships</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Graduated cohorts</div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{completedInternships}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Completed Internships</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Graduated cohorts</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#14B8A6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
           </div>
         </div>
 
         {/* Card 7: Certificates Issued */}
-        <div className="stat-card">
-          <div className="stat-icon blue">
-            <Award size={20} />
+        <div 
+          onClick={() => navigate('/admin/certificates')}
+          style={{
+            background: 'rgba(255, 242, 235, 0.75)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            padding: '22px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(249, 115, 22, 0.06)',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+          }}
+          className="soft-card-hover"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFEDD5', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Award size={20} />
+            </div>
           </div>
-          <div>
-            <div className="stat-value">{certificatesIssued}</div>
-            <div className="stat-label">Certificates Issued</div>
-            <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>Verified credentials</div>
+          <div style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{certificatesIssued}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Certificates Issued</div>
+            <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Verified credentials</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+              →
+            </div>
           </div>
         </div>
       </div>
@@ -170,15 +340,27 @@ export default function AdminOverview() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', textAlign: 'center' }}>
-              <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: '#F7F6FC', border: '1px solid #E5E2F0' }}>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#8B7CF6' }}>{activeInternships}</div>
+              <div 
+                className="soft-card-hover" 
+                onClick={() => navigate('/admin/internships')}
+                style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(240, 236, 255, 0.65)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
+              >
+                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#6C47FF' }}>{activeInternships}</div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#77758A', marginTop: '2px' }}>Active</div>
               </div>
-              <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: '#F0FDF4', border: '1px solid #DCFCE7' }}>
+              <div 
+                className="soft-card-hover" 
+                onClick={() => navigate('/admin/internships')}
+                style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(230, 250, 240, 0.65)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
+              >
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#16A34A' }}>{completedInternships}</div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#15803D', marginTop: '2px' }}>Completed</div>
               </div>
-              <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: '#EFF6FF', border: '1px solid #DBEAFE' }}>
+              <div 
+                className="soft-card-hover" 
+                onClick={() => navigate('/admin/internships')}
+                style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(230, 245, 255, 0.65)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
+              >
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#2563EB' }}>{upcomingInternships}</div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#1D4ED8', marginTop: '2px' }}>Upcoming</div>
               </div>
@@ -212,25 +394,41 @@ export default function AdminOverview() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
-            <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: '#FFFBEB', border: '1px solid #FEF3C7' }}>
+            <div 
+              className="soft-card-hover" 
+              onClick={() => navigate('/admin/tasks')}
+              style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(255, 242, 235, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
+            >
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D97706', textTransform: 'uppercase' }}>Submitted</div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#B45309', margin: '4px 0' }}>{submissionBreakdown.submitted}</div>
               <div style={{ fontSize: '0.75rem', color: '#D97706' }}>Awaiting initial review</div>
             </div>
 
-            <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: '#EFF6FF', border: '1px solid #DBEAFE' }}>
+            <div 
+              className="soft-card-hover" 
+              onClick={() => navigate('/admin/tasks')}
+              style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(230, 245, 255, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
+            >
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2563EB', textTransform: 'uppercase' }}>Under Review</div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1D4ED8', margin: '4px 0' }}>{submissionBreakdown.underReview}</div>
               <div style={{ fontSize: '0.75rem', color: '#2563EB' }}>Mentor evaluation active</div>
             </div>
 
-            <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: '#F0FDF4', border: '1px solid #DCFCE7' }}>
+            <div 
+              className="soft-card-hover" 
+              onClick={() => navigate('/admin/tasks')}
+              style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(230, 250, 240, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
+            >
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#16A34A', textTransform: 'uppercase' }}>Approved</div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#15803D', margin: '4px 0' }}>{submissionBreakdown.approved}</div>
               <div style={{ fontSize: '0.75rem', color: '#16A34A' }}>Successfully verified</div>
             </div>
 
-            <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: '#FEF2F2', border: '1px solid #FEE2E2' }}>
+            <div 
+              className="soft-card-hover" 
+              onClick={() => navigate('/admin/tasks')}
+              style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(255, 235, 245, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
+            >
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#DC2626', textTransform: 'uppercase' }}>Changes Requested</div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#B91C1C', margin: '4px 0' }}>{submissionBreakdown.changesRequested}</div>
               <div style={{ fontSize: '0.75rem', color: '#DC2626' }}>Revision needed</div>
@@ -255,8 +453,12 @@ export default function AdminOverview() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-              <div style={{ padding: '18px', borderRadius: '12px', backgroundColor: '#FFFBEB', border: '1px solid #FDE68A', display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#FEF3C7', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div 
+                className="soft-card-hover" 
+                onClick={() => navigate('/admin/certificates')}
+                style={{ padding: '18px', borderRadius: '18px', backgroundColor: 'rgba(255, 242, 235, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' }}
+              >
+                <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FEF3C7', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <AlertTriangle size={22} />
                 </div>
                 <div>
@@ -265,8 +467,12 @@ export default function AdminOverview() {
                 </div>
               </div>
 
-              <div style={{ padding: '18px', borderRadius: '12px', backgroundColor: '#F0FDF4', border: '1px solid #BBF7D0', display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#DCFCE7', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div 
+                className="soft-card-hover" 
+                onClick={() => navigate('/admin/certificates')}
+                style={{ padding: '18px', borderRadius: '18px', backgroundColor: 'rgba(230, 250, 240, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' }}
+              >
+                <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#DCFCE7', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Award size={22} />
                 </div>
                 <div>

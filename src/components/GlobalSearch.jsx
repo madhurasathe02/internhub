@@ -310,7 +310,7 @@ export default function GlobalSearch() {
 
     } else {
       // 3. INTERN / STUDENT
-      const studentName = user.name || 'Alex Johnson';
+      const studentName = user.name || 'Saloni Honrao';
 
       // 1. My Internship
       internships.forEach(i => {

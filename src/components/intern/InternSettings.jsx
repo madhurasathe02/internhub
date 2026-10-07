@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Settings, Save } from 'lucide-react';
+import ChangePasswordCard from '../ChangePasswordCard';
 
 export default function InternSettings() {
   const [saved, setSaved] = useState(false);
@@ -17,7 +18,7 @@ export default function InternSettings() {
           Student Account & Preferences
         </h1>
         <p style={{ color: '#77758A', fontSize: '0.9375rem', marginTop: '4px' }}>
-          Configure notification preferences and workspace display settings.
+          Configure notification preferences, account security, and workspace display settings.
         </p>
       </div>
 
@@ -44,6 +45,13 @@ export default function InternSettings() {
           </div>
         </form>
       </div>
+
+      {/* Change Password Option */}
+      <ChangePasswordCard 
+        title="Change Student Password" 
+        subtitle="Update your password to keep your intern portal account secure"
+      />
     </div>
   );
 }
+

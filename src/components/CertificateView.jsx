@@ -108,7 +108,7 @@ export default function CertificateView({ certificate, onDownload = null }) {
             paddingLeft: '24px',
             paddingRight: '24px'
           }}>
-            {certificate.internName || 'Alex Johnson'}
+            {certificate.internName || 'Saloni Honrao'}
           </div>
 
           {/* Course & Organization statement */}

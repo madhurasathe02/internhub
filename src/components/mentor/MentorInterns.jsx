@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Users, GraduationCap, FolderKanban, Plus, Award, Star, CheckCircle2, Filter } from 'lucide-react';
+import { Users, GraduationCap, FolderKanban, Plus, Award, Star, CheckCircle2, XCircle, Clock, Filter, ShieldCheck } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import EvaluationModal from '../EvaluationModal';
 import SearchBar from '../SearchBar';
 import EmptyState from '../EmptyState';
 
 export default function MentorInterns() {
-  const { studentsList, projects, assignProjectToStudent, evaluations } = useApp();
+  const { studentsList, projects, assignProjectToStudent, evaluations, approveStudentAccount, rejectStudentAccount } = useApp();
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [projectTitle, setProjectTitle] = useState('');
@@ -19,6 +19,9 @@ export default function MentorInterns() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTrack, setSelectedTrack] = useState('All');
   const [selectedEvalFilter, setSelectedEvalFilter] = useState('All');
+
+  const pendingStudents = studentsList.filter(st => st.status === 'Pending Approval');
+  const activeStudents = studentsList.filter(st => st.status !== 'Pending Approval');
 
   const handleAssign = (e) => {
     e.preventDefault();
@@ -38,7 +41,7 @@ export default function MentorInterns() {
     return evaluations.find(e => e.studentId === studentId || e.studentName.toLowerCase() === (studentName || '').toLowerCase());
   };
 
-  const filteredInterns = studentsList.filter(st => {
+  const filteredInterns = activeStudents.filter(st => {
     const matchesSearch = (st.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                           (st.email || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTrack = selectedTrack === 'All' || st.internshipJoined === selectedTrack;
@@ -56,13 +59,83 @@ export default function MentorInterns() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#29283A', margin: 0 }}>
-            My Assigned Interns
+            My Assigned Interns & Approval Center
           </h1>
           <p style={{ color: '#77758A', fontSize: '0.9375rem', marginTop: '4px' }}>
-            Supervise students, evaluate performance ratings, assign technical projects, and track milestone deliverables.
+            Approve student account registrations, supervise active interns, assign technical projects, and evaluate performance ratings.
           </p>
         </div>
       </div>
+
+      {/* PENDING STUDENT REGISTRATIONS FOR MENTOR APPROVAL */}
+      {pendingStudents.length > 0 && (
+        <div className="card" style={{ border: '2px solid #FCD34D', backgroundColor: '#FFFDF5' }}>
+          <div className="card-header" style={{ marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ padding: '8px', borderRadius: '10px', backgroundColor: '#FEF3C7', color: '#D97706' }}>
+                <Clock size={20} />
+              </div>
+              <div>
+                <h3 className="card-title" style={{ color: '#B45309' }}>
+                  Pending Student Registration Requests ({pendingStudents.length})
+                </h3>
+                <p style={{ fontSize: '0.8125rem', color: '#D97706', marginTop: '2px' }}>
+                  Students registered under your supervision awaiting your account approval before gaining login access.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {pendingStudents.map(st => (
+              <div key={st.id} style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '14px',
+                padding: '14px 18px',
+                borderRadius: '14px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #FDE68A',
+                boxShadow: '0 2px 6px rgba(217, 119, 6, 0.06)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div className="avatar" style={{ backgroundColor: '#F59E0B', width: '38px', height: '38px', fontWeight: 700 }}>
+                    {st.avatar || st.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#29283A', fontSize: '0.95rem' }}>{st.name}</div>
+                    <div style={{ fontSize: '0.8125rem', color: '#77758A' }}>
+                      {st.email} • <span style={{ color: '#6D61D9', fontWeight: 600 }}>{st.internshipJoined || 'Full Stack Web Development'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <button
+                    className="btn btn-outline btn-sm"
+                    style={{ borderColor: '#FCA5A5', color: '#DC2626' }}
+                    onClick={() => rejectStudentAccount(st.id)}
+                  >
+                    <XCircle size={14} />
+                    <span>Reject</span>
+                  </button>
+
+                  <button
+                    className="btn btn-primary btn-sm"
+                    style={{ backgroundColor: '#16A34A', borderColor: '#16A34A' }}
+                    onClick={() => approveStudentAccount(st.id)}
+                  >
+                    <CheckCircle2 size={14} />
+                    <span>Approve Student Account</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="card">
         {/* Search & Filter Toolbar */}

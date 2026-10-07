@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
   Sparkles,
-  GraduationCap,
-  UserCheck,
-  Shield,
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
@@ -12,47 +9,37 @@ import {
   Mail,
   User as UserIcon,
   Briefcase,
-  Loader2
+  Loader2,
+  AlertCircle,
+  Clock,
+  ShieldCheck,
+  GraduationCap,
+  UserCheck
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { auth, db } from '../firebase';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
-} from 'firebase/auth';
-import {
-  doc,
-  setDoc,
-  getDoc,
-  serverTimestamp
-} from 'firebase/firestore';
 
 export default function AuthPage({ initialMode = 'login' }) {
-  const { user, login, addStudent, addMentor } = useApp();
+  const { user, loginWithCredentials, registerAccount } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const getValidRole = (r) => (typeof r === 'string' && ['student', 'mentor', 'admin'].includes(r)) ? r : 'student';
 
   const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+  const [pendingNotice, setPendingNotice] = useState('');
+
+  // Form Fields
+  const [email, setEmail] = useState('saloni.honrao@university.edu');
+  const [password, setPassword] = useState('password123');
+  const [name, setName] = useState('');
+  const [registerRole, setRegisterRole] = useState('student'); // 'student' | 'mentor' (Admin prohibited)
 
   useEffect(() => {
     setIsLogin(initialMode === 'login');
   }, [initialMode]);
 
-  const initialRole = getValidRole(location.state?.role);
-  const [selectedRole, setSelectedRole] = useState(initialRole); // 'student' | 'mentor' | 'admin'
-  const [email, setEmail] = useState(() => {
-    if (initialRole === 'admin') return 'admin@internhub.edu';
-    if (initialRole === 'mentor') return 'sarah.jenkins@internhub.edu';
-    return 'alex.johnson@university.edu';
-  });
-  const [password, setPassword] = useState('••••••••••••');
-  const [name, setName] = useState('');
-
-  // If already logged in, automatically redirect to role dashboard
+  // If already logged in, redirect automatically
   useEffect(() => {
     if (user) {
       if (user.role === 'admin') {
@@ -65,133 +52,88 @@ export default function AuthPage({ initialMode = 'login' }) {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    if (location.state?.role) {
-      const valid = getValidRole(location.state.role);
-      setSelectedRole(valid);
-      if (valid === 'admin') setEmail('admin@internhub.edu');
-      else if (valid === 'mentor') setEmail('sarah.jenkins@internhub.edu');
-      else setEmail('alex.johnson@university.edu');
-    }
-  }, [location.state]);
-
-  // Update email preset when role changes
-  const handleRoleSelect = (role) => {
-    const validRole = getValidRole(role);
-    setSelectedRole(validRole);
-    if (validRole === 'admin') setEmail('admin@internhub.edu');
-    else if (validRole === 'mentor') setEmail('sarah.jenkins@internhub.edu');
-    else setEmail('alex.johnson@university.edu');
-  };
-
-  const handleSubmit = async (e) => {
+  const handleLoginSubmit = (e) => {
     e.preventDefault();
     setErrorMsg('');
+    setSuccessMsg('');
+    setPendingNotice('');
     setLoading(true);
 
-    const validRole = getValidRole(selectedRole);
-    const userName = name || (validRole === 'student' ? 'Alex Johnson' : validRole === 'mentor' ? 'Dr. Sarah Jenkins' : 'Prof. Marcus Vance');
-    const userEmail = email || `${validRole}@internhub.edu`;
+    setTimeout(() => {
+      const result = loginWithCredentials(email, password);
+      setLoading(false);
 
-    try {
-      if (!isLogin) {
-        // REGISTER USER IN FIREBASE AUTH & FIRESTORE
-        let uid = `user_${Date.now()}`;
-        try {
-          const userCredential = await createUserWithEmailAndPassword(auth, userEmail, password.length >= 6 ? password : 'password123');
-          uid = userCredential.user.uid;
-        } catch (authErr) {
-          console.warn('Firebase Auth notice:', authErr.message);
-          if (authErr.code === 'auth/email-already-in-use') {
-            try {
-              const loginCred = await signInWithEmailAndPassword(auth, userEmail, password.length >= 6 ? password : 'password123');
-              uid = loginCred.user.uid;
-            } catch (loginErr) {
-              console.warn('Firebase Auth signin notice:', loginErr.message);
-            }
-          }
-        }
-
-        // Store User Profile Document in Firestore 'users' collection
-        try {
-          await setDoc(doc(db, 'users', uid), {
-            uid,
-            name: userName,
-            email: userEmail,
-            role: validRole,
-            createdAt: serverTimestamp(),
-            lastLoginAt: serverTimestamp()
-          }, { merge: true });
-        } catch (firestoreErr) {
-          console.warn('Firestore user save notice:', firestoreErr.message);
-        }
-
-        // Update application state
-        if (validRole === 'student') {
-          addStudent({
-            name: userName,
-            email: userEmail,
-            company: 'Apex Systems Inc.',
-            mentor: 'Dr. Sarah Jenkins',
-            internshipJoined: 'Full Stack Web Development'
-          });
-        } else if (validRole === 'mentor') {
-          addMentor({
-            name: userName,
-            email: userEmail,
-            department: 'Software Engineering',
-            title: 'Faculty Supervisor'
-          });
+      if (result.success) {
+        if (result.user.role === 'admin') {
+          navigate('/admin/dashboard', { replace: true });
+        } else if (result.user.role === 'mentor') {
+          navigate('/mentor/dashboard', { replace: true });
+        } else {
+          navigate('/intern/dashboard', { replace: true });
         }
       } else {
-        // SIGN IN USER WITH FIREBASE AUTH & FIRESTORE
-        let uid = `user_${Date.now()}`;
-
-        try {
-          const userCredential = await signInWithEmailAndPassword(auth, userEmail, password.length >= 6 ? password : 'password123');
-          uid = userCredential.user.uid;
-
-          // Update user last login timestamp & role in Firestore
-          await setDoc(doc(db, 'users', uid), {
-            uid,
-            name: userName,
-            email: userEmail,
-            role: validRole,
-            lastLoginAt: serverTimestamp()
-          }, { merge: true });
-        } catch (authErr) {
-          console.warn('Firebase Auth login notice:', authErr.message);
-          // Store attempt record in Firestore
-          try {
-            const docId = userEmail.replace(/[^a-zA-Z0-9]/g, '_');
-            await setDoc(doc(db, 'users', docId), {
-              email: userEmail,
-              name: userName,
-              role: validRole,
-              lastLoginAt: serverTimestamp()
-            }, { merge: true });
-          } catch (fErr) {
-            console.warn('Firestore login record notice:', fErr.message);
-          }
+        if (result.reason === 'pending') {
+          setPendingNotice(result.message);
+        } else {
+          setErrorMsg(result.message || 'Invalid email or password.');
         }
       }
+    }, 400);
+  };
 
-      // Log in as the user's explicitly selected role
-      const loggedInUser = login(validRole, userEmail, userName);
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMsg('');
+    setSuccessMsg('');
+    setPendingNotice('');
+    setLoading(true);
 
-      // Automatically redirect based on user role
-      if (loggedInUser.role === 'admin') {
+    try {
+      const res = await registerAccount({
+        name,
+        email,
+        password,
+        role: registerRole
+      });
+      setLoading(false);
+
+      if (res.success) {
+        setSuccessMsg(res.message);
+        setIsLogin(true); // Switch to sign in mode so user can see their status
+        setEmail(email);
+      } else {
+        setErrorMsg(res.message);
+      }
+    } catch (err) {
+      setLoading(false);
+      setErrorMsg(err.message || 'Registration encountered an issue.');
+    }
+  };
+
+  // Quick Demo Account Selectors for convenient test driving
+  const handleQuickDemo = (demoEmail) => {
+    setEmail(demoEmail);
+    setPassword('password123');
+    setErrorMsg('');
+    setPendingNotice('');
+    setSuccessMsg('');
+    setIsLogin(true);
+
+    const result = loginWithCredentials(demoEmail, 'password123');
+    if (result.success) {
+      if (result.user.role === 'admin') {
         navigate('/admin/dashboard', { replace: true });
-      } else if (loggedInUser.role === 'mentor') {
+      } else if (result.user.role === 'mentor') {
         navigate('/mentor/dashboard', { replace: true });
       } else {
         navigate('/intern/dashboard', { replace: true });
       }
-    } catch (err) {
-      console.error('Auth error:', err);
-      setErrorMsg(err.message || 'Authentication process encountered an issue.');
-    } finally {
-      setLoading(false);
+    } else {
+      if (result.reason === 'pending') {
+        setPendingNotice(result.message);
+      } else {
+        setErrorMsg(result.message);
+      }
     }
   };
 
@@ -203,18 +145,18 @@ export default function AuthPage({ initialMode = 'login' }) {
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      padding: '20px 14px',
+      padding: '24px 14px',
       position: 'relative'
     }}>
       {/* Background soft glow blobs */}
       <div className="hero-bg-blobs" style={{ top: '-50px', right: '-50px' }} />
       <div className="hero-bg-blob-2" style={{ bottom: '-50px', left: '-50px' }} />
 
-      {/* Main Auth Card Container */}
+      {/* Main Unified Auth Card Container */}
       <div className="card soft-card" style={{
-        maxWidth: '480px',
+        maxWidth: '460px',
         width: '100%',
-        padding: '28px 20px',
+        padding: '28px 24px',
         boxShadow: 'var(--shadow-hover)',
         borderRadius: '24px',
         position: 'relative',
@@ -229,7 +171,7 @@ export default function AuthPage({ initialMode = 'login' }) {
             style={{ gap: '6px' }}
           >
             <ArrowLeft size={15} />
-            <span>Landing Page</span>
+            <span>Back to Home</span>
           </button>
         </div>
 
@@ -244,170 +186,266 @@ export default function AuthPage({ initialMode = 'login' }) {
               <span style={{ color: '#8B7CF6' }}>Hub</span>
             </div>
           </div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#29283A', marginTop: '16px', marginBottom: '4px' }}>
-            {isLogin ? 'Welcome Back!' : 'Create Your Account'}
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#29283A', marginTop: '16px', marginBottom: '4px' }}>
+            {isLogin ? 'Sign In to Workspace' : 'Create Your Account'}
           </h2>
           <p style={{ fontSize: '0.84rem', color: '#77758A' }}>
-            {isLogin ? 'Select your role and sign in to access your workspace' : 'Join InternHub to manage internships & project tasks'}
+            {isLogin
+              ? 'Enter your account credentials to access your dashboard'
+              : 'Register your details to request access from your supervisor'}
           </p>
         </div>
 
-        {/* 1. ROLE SELECTOR TABS */}
-        <div style={{ marginBottom: '24px' }}>
-          <label className="form-label" style={{ marginBottom: '10px', display: 'block', fontSize: '0.8125rem', color: '#29283A', fontWeight: 700 }}>
-            SELECT YOUR ROLE:
-          </label>
+        {/* Notifications & Banners */}
+        {successMsg && (
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))',
-            gap: '6px',
-            backgroundColor: '#EEECFA',
-            padding: '6px',
-            borderRadius: '14px',
-            border: '1px solid #DDD8F2'
+            padding: '12px 14px',
+            borderRadius: '12px',
+            backgroundColor: '#F0FDF4',
+            border: '1px solid #BBF7D0',
+            color: '#16A34A',
+            fontSize: '0.8125rem',
+            marginBottom: '18px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '8px'
           }}>
+            <CheckCircle2 size={18} style={{ flexShrink: 0, marginTop: '1px' }} />
+            <div style={{ lineHeight: 1.4, fontWeight: 600 }}>{successMsg}</div>
+          </div>
+        )}
+
+        {pendingNotice && (
+          <div style={{
+            padding: '14px',
+            borderRadius: '14px',
+            backgroundColor: '#FFFBEB',
+            border: '1px solid #FCD34D',
+            color: '#B45309',
+            fontSize: '0.84rem',
+            marginBottom: '18px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '10px'
+          }}>
+            <Clock size={20} style={{ flexShrink: 0, marginTop: '2px', color: '#D97706' }} />
+            <div>
+              <div style={{ fontWeight: 800, fontSize: '0.9rem', marginBottom: '2px' }}>Account Approval Pending ⏳</div>
+              <div style={{ lineHeight: 1.4 }}>{pendingNotice}</div>
+            </div>
+          </div>
+        )}
+
+        {errorMsg && (
+          <div style={{
+            padding: '12px 14px',
+            borderRadius: '12px',
+            backgroundColor: '#FEE2E2',
+            border: '1px solid #FCA5A5',
+            color: '#DC2626',
+            fontSize: '0.8125rem',
+            marginBottom: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontWeight: 600
+          }}>
+            <AlertCircle size={18} style={{ flexShrink: 0 }} />
+            <span>{errorMsg}</span>
+          </div>
+        )}
+
+        {/* SINGLE LOGIN FORM */}
+        {isLogin ? (
+          <form onSubmit={handleLoginSubmit}>
+            <div className="form-group">
+              <label className="form-label">Email Address</label>
+              <div style={{ position: 'relative' }}>
+                <Mail size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#77758A' }} />
+                <input
+                  type="email"
+                  className="form-input"
+                  placeholder="name@internhub.edu"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={{ paddingLeft: '36px' }}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <div style={{ position: 'relative' }}>
+                <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#77758A' }} />
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="••••••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{ paddingLeft: '36px' }}
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg"
+              disabled={loading}
+              style={{ width: '100%', marginTop: '8px', opacity: loading ? 0.7 : 1 }}
+            >
+              <span>{loading ? 'Authenticating...' : 'Sign In to Account'}</span>
+              {loading ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <ArrowRight size={18} />}
+            </button>
+          </form>
+        ) : (
+          /* SINGLE REGISTRATION FORM */
+          <form onSubmit={handleRegisterSubmit}>
+            <div className="form-group">
+              <label className="form-label">Full Name</label>
+              <div style={{ position: 'relative' }}>
+                <UserIcon size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#77758A' }} />
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. Saloni Honrao"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  style={{ paddingLeft: '36px' }}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Email Address</label>
+              <div style={{ position: 'relative' }}>
+                <Mail size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#77758A' }} />
+                <input
+                  type="email"
+                  className="form-input"
+                  placeholder="e.g. saloni.honrao@university.edu"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={{ paddingLeft: '36px' }}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <div style={{ position: 'relative' }}>
+                <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#77758A' }} />
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="Create password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{ paddingLeft: '36px' }}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Register Account As</label>
+              <select
+                className="form-input"
+                value={registerRole}
+                onChange={(e) => setRegisterRole(e.target.value)}
+                style={{ borderRadius: '10px', height: '42px', fontWeight: 600, color: '#29283A' }}
+              >
+                <option value="student">🎓 Student / Intern (Requires Mentor Approval)</option>
+                <option value="mentor">👨‍🏫 Faculty / Industry Mentor (Requires Admin Approval)</option>
+              </select>
+              <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '6px' }}>
+                * Note: Admin account is restricted to institutional leadership (Madhura Sathe).
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg"
+              disabled={loading}
+              style={{ width: '100%', marginTop: '8px', opacity: loading ? 0.7 : 1 }}
+            >
+              <span>{loading ? 'Submitting Registration...' : 'Register Account'}</span>
+              {loading ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <ArrowRight size={18} />}
+            </button>
+          </form>
+        )}
+
+        {/* QUICK DEMO LOGIN BUTTONS */}
+        <div style={{ marginTop: '24px', paddingTop: '18px', borderTop: '1px solid #E5E2F0' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#77758A', textTransform: 'uppercase', marginBottom: '10px', textAlign: 'center' }}>
+            Quick Demo Shortcuts (Click to prefill)
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px' }}>
             <button
               type="button"
-              onClick={() => handleRoleSelect('student')}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '4px',
-                padding: '10px 4px',
-                borderRadius: '10px',
-                border: 'none',
-                backgroundColor: selectedRole === 'student' ? '#FFFFFF' : 'transparent',
-                color: selectedRole === 'student' ? '#6D61D9' : '#77758A',
-                boxShadow: selectedRole === 'student' ? '0 2px 8px rgba(109, 97, 217, 0.15)' : 'none',
-                fontWeight: 700,
-                fontSize: '0.78rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className="btn btn-outline btn-sm"
+              onClick={() => handleQuickDemo('saloni.honrao@university.edu')}
+              style={{ fontSize: '0.76rem', justifyContent: 'flex-start', padding: '6px 8px' }}
             >
-              <GraduationCap size={18} />
-              <span>Intern / Student</span>
+              <GraduationCap size={14} style={{ color: '#8B7CF6' }} />
+              <span>Student (Saloni)</span>
             </button>
 
             <button
               type="button"
-              onClick={() => handleRoleSelect('mentor')}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '4px',
-                padding: '10px 4px',
-                borderRadius: '10px',
-                border: 'none',
-                backgroundColor: selectedRole === 'mentor' ? '#FFFFFF' : 'transparent',
-                color: selectedRole === 'mentor' ? '#6D61D9' : '#77758A',
-                boxShadow: selectedRole === 'mentor' ? '0 2px 8px rgba(109, 97, 217, 0.15)' : 'none',
-                fontWeight: 700,
-                fontSize: '0.78rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className="btn btn-outline btn-sm"
+              onClick={() => handleQuickDemo('sarah.jenkins@internhub.edu')}
+              style={{ fontSize: '0.76rem', justifyContent: 'flex-start', padding: '6px 8px' }}
             >
-              <UserCheck size={18} />
-              <span>Mentor</span>
+              <UserCheck size={14} style={{ color: '#6D61D9' }} />
+              <span>Mentor (Dr. Sarah)</span>
             </button>
 
             <button
               type="button"
-              onClick={() => handleRoleSelect('admin')}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '4px',
-                padding: '10px 4px',
-                borderRadius: '10px',
-                border: 'none',
-                backgroundColor: selectedRole === 'admin' ? '#FFFFFF' : 'transparent',
-                color: selectedRole === 'admin' ? '#6D61D9' : '#77758A',
-                boxShadow: selectedRole === 'admin' ? '0 2px 8px rgba(109, 97, 217, 0.15)' : 'none',
-                fontWeight: 700,
-                fontSize: '0.78rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className="btn btn-outline btn-sm"
+              onClick={() => handleQuickDemo('madhu2@gmail.com')}
+              style={{ fontSize: '0.76rem', justifyContent: 'flex-start', padding: '6px 8px' }}
             >
-              <Shield size={18} />
-              <span>Admin</span>
+              <ShieldCheck size={14} style={{ color: '#2563EB' }} />
+              <span>Admin (Madhura Sathe)</span>
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-outline btn-sm"
+              onClick={() => handleQuickDemo('rohan.sharma@univ.edu')}
+              style={{ fontSize: '0.76rem', justifyContent: 'flex-start', padding: '6px 8px', borderColor: '#FCD34D', color: '#B45309', backgroundColor: '#FFFBEB' }}
+            >
+              <Clock size={14} />
+              <span>Pending Student</span>
             </button>
           </div>
         </div>
 
-        {/* FORM */}
-        <form onSubmit={handleSubmit}>
-          {errorMsg && (
-            <div style={{ padding: '10px 14px', borderRadius: '10px', backgroundColor: '#FEE2E2', color: '#DC2626', fontSize: '0.8125rem', marginBottom: '16px', fontWeight: 600 }}>
-              {errorMsg}
-            </div>
-          )}
-
-          {!isLogin && (
-            <div className="form-group">
-              <label className="form-label">Full Name</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder={selectedRole === 'student' ? 'Alex Johnson' : selectedRole === 'mentor' ? 'Dr. Sarah Jenkins' : 'Prof. Marcus Vance'}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required={!isLogin}
-              />
-            </div>
-          )}
-
-          <div className="form-group">
-            <label className="form-label">Email Address</label>
-            <input
-              type="email"
-              className="form-input"
-              placeholder={selectedRole === 'student' ? 'alex.johnson@university.edu' : selectedRole === 'mentor' ? 'sarah.jenkins@internhub.edu' : 'admin@internhub.edu'}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Password</label>
-            <input
-              type="password"
-              className="form-input"
-              placeholder="••••••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%', marginTop: '8px', opacity: loading ? 0.7 : 1 }}>
-            <span>
-              {loading
-                ? 'Processing...'
-                : (isLogin ? `Sign In as ${selectedRole === 'student' ? 'Student' : selectedRole === 'mentor' ? 'Mentor' : 'Admin'}` : 'Register & Enter Workspace')}
-            </span>
-            {loading ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <ArrowRight size={18} />}
-          </button>
-        </form>
-
         {/* TOGGLE LOGIN / REGISTER */}
-        <div style={{ textAlign: 'center', marginTop: '24px', borderTop: '1px solid #E5E2F0', paddingTop: '16px' }}>
+        <div style={{ textAlign: 'center', marginTop: '18px' }}>
           <button
             type="button"
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setErrorMsg('');
+              setPendingNotice('');
+              setSuccessMsg('');
+            }}
             style={{ background: 'none', border: 'none', fontSize: '0.84rem', color: '#8B7CF6', fontWeight: 700, cursor: 'pointer' }}
           >
-            {isLogin ? "Don't have an account? Sign up / Register" : 'Already registered? Sign in'}
+            {isLogin ? "Don't have an account yet? Register here" : 'Already have an account? Sign in'}
           </button>
         </div>
       </div>
     </div>
   );
 }
+
 

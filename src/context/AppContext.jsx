@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
 import { signOut } from 'firebase/auth';
-import { collection, addDoc, onSnapshot, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, doc, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { 
   MOCK_USER, 
   MOCK_MENTOR, 
@@ -54,9 +54,9 @@ const DEFAULT_ENROLLMENT_REQUESTS = [
   {
     id: 'req_01',
     studentId: 'usr_01',
-    studentName: 'Alex Johnson',
-    studentEmail: 'alex.johnson@university.edu',
-    studentAvatar: 'AJ',
+    studentName: 'Saloni Honrao',
+    studentEmail: 'saloni.honrao@university.edu',
+    studentAvatar: 'SH',
     internshipId: 'intern_01',
     internshipTitle: 'Full Stack Web Development',
     organization: 'Apex Systems Inc.',
@@ -83,8 +83,8 @@ const DEFAULT_TEACHER_FEEDBACKS = [
   {
     id: 'tf_01',
     studentId: 'usr_01',
-    studentName: 'Alex Johnson',
-    studentAvatar: 'AJ',
+    studentName: 'Saloni Honrao',
+    studentAvatar: 'SH',
     mentorId: 'usr_02',
     mentorName: 'Dr. Sarah Jenkins',
     rating: 5,
@@ -118,8 +118,8 @@ const DEFAULT_EVALUATIONS = [
   {
     id: 'eval_01',
     studentId: 'usr_01',
-    studentName: 'Alex Johnson',
-    studentAvatar: 'AJ',
+    studentName: 'Saloni Honrao',
+    studentAvatar: 'SH',
     mentorName: 'Dr. Sarah Jenkins',
     internshipTrack: 'Full Stack Web Development',
     evaluatedAt: 'Sep 24, 2026',
@@ -134,7 +134,7 @@ const DEFAULT_EVALUATIONS = [
     },
     overallScore: 4.8,
     gradeLabel: 'A+ (96%)',
-    overallFeedback: 'Alex has shown extraordinary technical proficiency in full-stack architecture, clean code practices, and rapid problem solving. Consistently delivered deliverables ahead of deadlines.'
+    overallFeedback: 'Saloni has shown extraordinary technical proficiency in full-stack architecture, clean code practices, and rapid problem solving. Consistently delivered deliverables ahead of deadlines.'
   },
   {
     id: 'eval_02',
@@ -163,8 +163,8 @@ const DEFAULT_CERTIFICATES = [
   {
     id: 'INH-2026-0001',
     internId: 'usr_01',
-    internName: 'Alex Johnson',
-    internAvatar: 'AJ',
+    internName: 'Saloni Honrao',
+    internAvatar: 'SH',
     internshipTitle: 'Full Stack Web Development',
     projectName: 'Cloud-Native SaaS Dashboard',
     company: 'Apex Systems Inc.',
@@ -186,7 +186,7 @@ const DEFAULT_CERTIFICATES = [
     projectName: 'LLM Fine-Tuning & Code Review Assistant',
     company: 'Neural Labs',
     mentorName: 'Prof. Marcus Vance',
-    adminSignatory: 'Prof. Marcus Vance',
+    adminSignatory: 'Madhura Sathe',
     startDate: 'Jul 01, 2026',
     endDate: 'Nov 30, 2026',
     completionDate: 'Sep 20, 2026',
@@ -203,7 +203,7 @@ const DEFAULT_CERTIFICATES = [
     projectName: 'Payment Gateway Integration',
     company: 'FinTech Dynamics',
     mentorName: 'Elena Rostova',
-    adminSignatory: 'Prof. Marcus Vance',
+    adminSignatory: 'Madhura Sathe',
     startDate: 'May 15, 2026',
     endDate: 'Nov 15, 2026',
     completionDate: null,
@@ -217,7 +217,7 @@ const DEFAULT_ANNOUNCEMENTS = [
   {
     id: 'ann_01',
     title: 'Mid-Term Internship Progress Review',
-    author: 'Prof. Marcus Vance (Admin)',
+    author: 'Madhura Sathe (Admin)',
     date: 'Sep 24, 2026',
     content: 'All interns are requested to complete pending milestone task submissions before Oct 05 for mid-term evaluations.',
     roleTarget: 'All'
@@ -233,24 +233,40 @@ const DEFAULT_ANNOUNCEMENTS = [
 ];
 
 const DEFAULT_STUDENTS = [
-  { id: 'usr_01', name: 'Alex Johnson', email: 'alex.johnson@university.edu', role: 'student', company: 'Apex Systems', status: 'Active', mentor: 'Dr. Sarah Jenkins', internshipJoined: 'Full Stack Web Development' },
-  { id: 'usr_03', name: 'Maya Patel', email: 'm.patel@univ.edu', role: 'student', company: 'FinTech Dynamics', status: 'Active', mentor: 'Elena Rostova', internshipJoined: 'FinTech Microservices Architecture' },
-  { id: 'usr_04', name: 'Liam Chen', email: 'l.chen@univ.edu', role: 'student', company: 'Neural Labs', status: 'Active', mentor: 'Prof. Marcus Vance', internshipJoined: 'AI & Machine Learning Engineering' },
-  { id: 'usr_05', name: 'Sophia Taylor', email: 's.taylor@univ.edu', role: 'student', company: 'BioTech Innovators', status: 'Active', mentor: 'Dr. Sarah Jenkins', internshipJoined: 'Full Stack Web Development' },
-  { id: 'usr_08', name: 'Madhura Sathe', email: 'm.sathe@univ.edu', role: 'student', company: 'Apex Systems', status: 'Active', mentor: 'Dr. Sarah Jenkins', internshipJoined: 'Full Stack Web Development' },
+  { id: 'usr_01', name: 'Saloni Honrao', email: 'saloni.honrao@university.edu', role: 'student', company: 'Apex Systems Inc.', status: 'Active', mentor: 'Dr. Sarah Jenkins', internshipJoined: 'Full Stack Web Development', avatar: 'SH', university: 'Tech Institute of Science', major: 'Computer Science & Engineering' },
+  { id: 'usr_03', name: 'Maya Patel', email: 'm.patel@univ.edu', role: 'student', company: 'FinTech Dynamics', status: 'Active', mentor: 'Elena Rostova', internshipJoined: 'FinTech Microservices Architecture', avatar: 'MP', university: 'National University of Tech', major: 'FinTech Systems' },
+  { id: 'usr_04', name: 'Liam Chen', email: 'l.chen@univ.edu', role: 'student', company: 'Neural Labs', status: 'Active', mentor: 'Prof. Marcus Vance', internshipJoined: 'AI & Machine Learning Engineering', avatar: 'LC', university: 'Institute of AI', major: 'Machine Learning' },
+  { id: 'usr_05', name: 'Sophia Taylor', email: 's.taylor@univ.edu', role: 'student', company: 'BioTech Innovators', status: 'Active', mentor: 'Dr. Sarah Jenkins', internshipJoined: 'Full Stack Web Development', avatar: 'ST', university: 'State Tech', major: 'Software Engineering' },
+  { id: 'usr_demo_pend_st', name: 'Rohan Sharma', email: 'rohan.sharma@univ.edu', role: 'student', company: 'Apex Systems Inc.', status: 'Pending Approval', mentor: 'Dr. Sarah Jenkins', internshipJoined: 'Full Stack Web Development', avatar: 'RS', university: 'Tech Institute of Science', major: 'Computer Science' },
 ];
 
 const DEFAULT_MENTORS = [
-  { id: 'usr_02', name: 'Dr. Sarah Jenkins', email: 'sarah.jenkins@internhub.edu', role: 'mentor', department: 'Computer Science & AI', assignedCount: 14, title: 'Senior Software Architect' },
-  { id: 'usr_06', name: 'Prof. Marcus Vance', email: 'm.vance@internhub.edu', role: 'mentor', department: 'Software Systems', assignedCount: 12, title: 'Academic Director' },
-  { id: 'usr_07', name: 'Elena Rostova', email: 'elena@fintechdyn.com', role: 'mentor', department: 'FinTech Labs', assignedCount: 15, title: 'Principal Engineer' },
+  { id: 'usr_02', name: 'Dr. Sarah Jenkins', email: 'sarah.jenkins@internhub.edu', role: 'mentor', department: 'Computer Science & AI', assignedCount: 14, title: 'Senior Software Architect', status: 'Active' },
+  { id: 'usr_06', name: 'Prof. Marcus Vance', email: 'm.vance@internhub.edu', role: 'mentor', department: 'Software Systems', assignedCount: 12, title: 'Academic Director', status: 'Active' },
+  { id: 'usr_07', name: 'Elena Rostova', email: 'elena@fintechdyn.com', role: 'mentor', department: 'FinTech Labs', assignedCount: 15, title: 'Principal Engineer', status: 'Active' },
+  { id: 'usr_demo_pend_m', name: 'Dr. Anita Roy', email: 'anita.roy@internhub.edu', role: 'mentor', department: 'AI & Data Science Lab', assignedCount: 0, title: 'Associate Professor', status: 'Pending Approval', avatar: 'AR' },
 ];
 
 export const AppProvider = ({ children }) => {
-  // Auth state
+  const getInitials = (nameStr) => {
+    if (!nameStr) return 'SH';
+    const parts = nameStr.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  // Auth state - Defaults to null when no active user session
   const [user, setUser] = useState(() => {
     const saved = sessionStorage.getItem('internhub_user');
-    return saved ? JSON.parse(saved) : null;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed;
+      } catch (e) {
+        console.warn('Session parse notice:', e);
+      }
+    }
+    return null;
   });
 
   // Toast Feedback state
@@ -382,6 +398,70 @@ export const AppProvider = ({ children }) => {
     }
   }, []);
 
+  // Real-time Firebase Firestore synchronization for Users & Approval Status
+  useEffect(() => {
+    try {
+      const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
+        if (!snapshot.empty) {
+          const firestoreUsers = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+          // Sync student approval statuses from Firestore DB
+          setStudentsList(prev => {
+            const updated = [...prev];
+            firestoreUsers.filter(u => u.role === 'student').forEach(fu => {
+              const idx = updated.findIndex(s => s.id === fu.id || (s.email && s.email.toLowerCase() === fu.email?.toLowerCase()));
+              if (idx >= 0) {
+                updated[idx] = { ...updated[idx], ...fu };
+              } else {
+                updated.unshift({
+                  id: fu.id || `usr_${Date.now()}`,
+                  name: fu.name,
+                  email: fu.email,
+                  role: 'student',
+                  status: fu.status || 'Pending Approval',
+                  company: fu.company || 'Apex Systems Inc.',
+                  mentor: fu.mentor || 'Dr. Sarah Jenkins',
+                  internshipJoined: fu.internshipJoined || 'Full Stack Web Development',
+                  avatar: fu.avatar || getInitials(fu.name)
+                });
+              }
+            });
+            return updated;
+          });
+
+          // Sync mentor approval statuses from Firestore DB
+          setMentorsList(prev => {
+            const updated = [...prev];
+            firestoreUsers.filter(u => u.role === 'mentor').forEach(fu => {
+              const idx = updated.findIndex(m => m.id === fu.id || (m.email && m.email.toLowerCase() === fu.email?.toLowerCase()));
+              if (idx >= 0) {
+                updated[idx] = { ...updated[idx], ...fu };
+              } else {
+                updated.unshift({
+                  id: fu.id || `usr_${Date.now()}`,
+                  name: fu.name,
+                  email: fu.email,
+                  role: 'mentor',
+                  status: fu.status || 'Pending Approval',
+                  department: fu.department || 'Computer Science & Software',
+                  title: fu.title || 'Faculty Supervisor',
+                  assignedCount: fu.assignedCount || 0,
+                  avatar: fu.avatar || getInitials(fu.name)
+                });
+              }
+            });
+            return updated;
+          });
+        }
+      }, (error) => {
+        console.warn('Firebase Firestore users snapshot notice:', error);
+      });
+      return () => unsubscribe();
+    } catch (err) {
+      console.warn('Firestore initialization notice for users collection:', err);
+    }
+  }, []);
+
   // Sync state changes to sessionStorage for session persistence
   useEffect(() => {
     if (user) sessionStorage.setItem('internhub_user', JSON.stringify(user));
@@ -400,44 +480,411 @@ export const AppProvider = ({ children }) => {
   useEffect(() => { sessionStorage.setItem('internhub_students', JSON.stringify(studentsList)); }, [studentsList]);
   useEffect(() => { sessionStorage.setItem('internhub_mentors', JSON.stringify(mentorsList)); }, [mentorsList]);
 
-  // Login / Logout
-  const login = (role, customEmail = null, customName = null) => {
-    const normalizedRole = (typeof role === 'string' && ['student', 'mentor', 'admin'].includes(role)) ? role : 'student';
-    let userData = null;
-    if (normalizedRole === 'admin') {
-      userData = {
-        id: 'usr_admin',
-        name: customName || 'Prof. Marcus Vance',
-        email: customEmail || 'admin@internhub.edu',
-        role: 'admin',
-        title: 'Institutional Director',
-        avatar: 'MV',
-      };
-    } else if (normalizedRole === 'mentor') {
-      userData = {
-        id: 'usr_mentor',
-        name: customName || 'Dr. Sarah Jenkins',
-        email: customEmail || 'sarah.jenkins@internhub.edu',
+  // Account Approval Functions (PERSISTED TO FIRESTORE DB)
+  const approveStudentAccount = async (studentId) => {
+    let targetName = '';
+    let targetEmail = '';
+    setStudentsList(prev => prev.map(s => {
+      if (s.id === studentId || s.email === studentId) {
+        targetName = s.name;
+        targetEmail = s.email;
+        return { ...s, status: 'Active' };
+      }
+      return s;
+    }));
+    showToast(`Approved student account for ${targetName || 'Student'}!`, 'success');
+
+    // Store approval status in Firestore Database 'users' collection
+    try {
+      const docId = (targetEmail || studentId).replace(/[^a-zA-Z0-9]/g, '_');
+      await setDoc(doc(db, 'users', docId), {
+        email: targetEmail || studentId,
+        name: targetName,
+        role: 'student',
+        status: 'Active',
+        approvedAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.warn('Firestore student approval save notice:', err);
+    }
+  };
+
+  const rejectStudentAccount = async (studentId) => {
+    let targetName = '';
+    let targetEmail = '';
+    setStudentsList(prev => prev.map(s => {
+      if (s.id === studentId || s.email === studentId) {
+        targetName = s.name;
+        targetEmail = s.email;
+        return { ...s, status: 'Rejected' };
+      }
+      return s;
+    }));
+    showToast(`Declined student registration for ${targetName || 'Student'}.`, 'warning');
+
+    // Store rejection status in Firestore Database 'users' collection
+    try {
+      const docId = (targetEmail || studentId).replace(/[^a-zA-Z0-9]/g, '_');
+      await setDoc(doc(db, 'users', docId), {
+        email: targetEmail || studentId,
+        name: targetName,
+        role: 'student',
+        status: 'Rejected',
+        rejectedAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.warn('Firestore student rejection save notice:', err);
+    }
+  };
+
+  const approveMentorAccount = async (mentorId) => {
+    let targetName = '';
+    let targetEmail = '';
+    setMentorsList(prev => prev.map(m => {
+      if (m.id === mentorId || m.email === mentorId) {
+        targetName = m.name;
+        targetEmail = m.email;
+        return { ...m, status: 'Active' };
+      }
+      return m;
+    }));
+    showToast(`Approved mentor account for ${targetName || 'Mentor'}!`, 'success');
+
+    // Store approval status in Firestore Database 'users' collection
+    try {
+      const docId = (targetEmail || mentorId).replace(/[^a-zA-Z0-9]/g, '_');
+      await setDoc(doc(db, 'users', docId), {
+        email: targetEmail || mentorId,
+        name: targetName,
         role: 'mentor',
-        title: 'Senior Software Architect & Supervisor',
-        department: 'Computer Science & AI Lab',
-        avatar: 'SJ',
+        status: 'Active',
+        approvedAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.warn('Firestore mentor approval save notice:', err);
+    }
+  };
+
+  const rejectMentorAccount = async (mentorId) => {
+    let targetName = '';
+    let targetEmail = '';
+    setMentorsList(prev => prev.map(m => {
+      if (m.id === mentorId || m.email === mentorId) {
+        targetName = m.name;
+        targetEmail = m.email;
+        return { ...m, status: 'Rejected' };
+      }
+      return m;
+    }));
+    showToast(`Declined mentor registration for ${targetName || 'Mentor'}.`, 'warning');
+
+    // Store rejection status in Firestore Database 'users' collection
+    try {
+      const docId = (targetEmail || mentorId).replace(/[^a-zA-Z0-9]/g, '_');
+      await setDoc(doc(db, 'users', docId), {
+        email: targetEmail || mentorId,
+        name: targetName,
+        role: 'mentor',
+        status: 'Rejected',
+        rejectedAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.warn('Firestore mentor rejection save notice:', err);
+    }
+  };
+
+  // Unified Registration Function (PERSISTED TO FIRESTORE DB)
+  const registerAccount = async ({ name, email, password, role }) => {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanName = (name || '').trim();
+
+    if (role === 'admin') {
+      return { success: false, message: 'Only one system administrator is allowed (Madhura Sathe).' };
+    }
+
+    const existsStudent = studentsList.some(s => s.email.toLowerCase() === cleanEmail);
+    const existsMentor = mentorsList.some(m => m.email.toLowerCase() === cleanEmail);
+    const isAdminEmail = cleanEmail === 'madhu2@gmail.com' || cleanEmail === 'admin@internhub.edu';
+
+    if (existsStudent || existsMentor || isAdminEmail) {
+      return { success: false, message: 'An account with this email address already exists. Please sign in.' };
+    }
+
+    // Write user registration record to Firestore Database 'users' collection
+    const docId = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+    try {
+      await setDoc(doc(db, 'users', docId), {
+        id: docId,
+        name: cleanName,
+        email: cleanEmail,
+        role,
+        status: 'Pending Approval',
+        company: role === 'student' ? 'Apex Systems Inc.' : undefined,
+        mentor: role === 'student' ? 'Dr. Sarah Jenkins' : undefined,
+        department: role === 'mentor' ? 'Computer Science & Software' : undefined,
+        title: role === 'mentor' ? 'Faculty Supervisor' : undefined,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.warn('Firestore registration doc save notice:', err);
+    }
+
+    if (role === 'mentor') {
+      const newMentor = {
+        id: docId,
+        name: cleanName,
+        email: cleanEmail,
+        role: 'mentor',
+        department: 'Computer Science & Software',
+        assignedCount: 0,
+        title: 'Faculty Supervisor',
+        status: 'Pending Approval',
+        avatar: getInitials(cleanName)
+      };
+      setMentorsList(prev => [newMentor, ...prev]);
+
+      setNotifications(prev => [
+        {
+          id: `notif_${Date.now()}`,
+          title: 'New Mentor Registration Pending Approval 👨‍🏫',
+          desc: `${cleanName} registered as Mentor. Admin approval required before account activation.`,
+          time: 'Just now',
+          unread: true,
+          type: 'info',
+          targetRole: 'admin'
+        },
+        ...prev
+      ]);
+
+      return {
+        success: true,
+        message: `Account created! Your mentor account is pending approval by Admin (Madhura Sathe). Please wait for Admin approval before signing in.`
       };
     } else {
-      userData = {
-        id: 'usr_01',
-        name: customName || 'Alex Johnson',
-        email: customEmail || 'alex.johnson@university.edu',
+      const newStudent = {
+        id: docId,
+        name: cleanName,
+        email: cleanEmail,
         role: 'student',
-        title: 'Full Stack Web Intern',
+        company: 'Apex Systems Inc.',
+        status: 'Pending Approval',
+        mentor: 'Dr. Sarah Jenkins',
+        internshipJoined: 'Full Stack Web Development',
+        avatar: getInitials(cleanName),
         university: 'Tech Institute of Science',
-        major: 'Computer Science & Engineering',
-        avatar: 'AJ',
+        major: 'Computer Science & Engineering'
+      };
+      setStudentsList(prev => [newStudent, ...prev]);
+
+      setNotifications(prev => [
+        {
+          id: `notif_${Date.now()}`,
+          title: 'New Student Registration Pending Approval 🎓',
+          desc: `${cleanName} registered as Student. Mentor Dr. Sarah Jenkins approval required before account activation.`,
+          time: 'Just now',
+          unread: true,
+          type: 'info',
+          targetRole: 'mentor'
+        },
+        ...prev
+      ]);
+
+      return {
+        success: true,
+        message: `Account created! Your student account is pending approval by Mentor (Dr. Sarah Jenkins). Please wait for Mentor approval before signing in.`
       };
     }
-    setUser(userData);
-    showToast(`Welcome back, ${userData.name}! Logged in as ${normalizedRole.toUpperCase()}.`, 'success');
-    return userData;
+  };
+
+  // Unified Sign In / Login Function (EXACT EMAIL MATCH REQUIRED & STORED TO DB)
+  const loginWithCredentials = (email, password) => {
+    const cleanEmail = (email || '').trim().toLowerCase();
+
+    if (!cleanEmail) {
+      return { success: false, reason: 'not_found', message: 'Please enter your registered email address.' };
+    }
+
+    let userObj = null;
+
+    // 1. Check Single Admin (Madhura Sathe)
+    if (
+      cleanEmail === 'madhu2@gmail.com' ||
+      cleanEmail === 'admin@internhub.edu' || 
+      cleanEmail === 'admin' || 
+      cleanEmail === 'm.sathe@univ.edu' || 
+      cleanEmail.includes('madhu') || 
+      cleanEmail.includes('madhura')
+    ) {
+      const adminData = {
+        id: 'usr_admin',
+        name: 'Madhura Sathe',
+        email: 'madhu2@gmail.com',
+        role: 'admin',
+        title: 'System Administrator & Institutional Director',
+        avatar: 'MS',
+        status: 'Active'
+      };
+      userObj = adminData;
+      setUser(adminData);
+      showToast('Welcome back, Madhura Sathe! Signed in as ADMIN.', 'success');
+    }
+
+    // 2. Check Mentor List (Exact email match only)
+    if (!userObj) {
+      const mentorMatch = mentorsList.find(m => (m.email || '').toLowerCase() === cleanEmail);
+      if (mentorMatch) {
+        if (mentorMatch.status === 'Pending Approval' || mentorMatch.status === 'Pending') {
+          return {
+            success: false,
+            reason: 'pending',
+            message: `Your mentor account is pending approval by the Admin (Madhura Sathe). Please wait for Admin approval before signing in.`
+          };
+        }
+        if (mentorMatch.status === 'Rejected') {
+          return {
+            success: false,
+            reason: 'rejected',
+            message: `Your mentor registration request was not approved.`
+          };
+        }
+
+        const mentorData = {
+          id: mentorMatch.id,
+          name: mentorMatch.name,
+          email: mentorMatch.email,
+          role: 'mentor',
+          title: mentorMatch.title || 'Senior Software Architect & Supervisor',
+          department: mentorMatch.department || 'Computer Science & AI Lab',
+          avatar: mentorMatch.avatar || getInitials(mentorMatch.name),
+          status: 'Active'
+        };
+        userObj = mentorData;
+        setUser(mentorData);
+        showToast(`Welcome back, ${mentorData.name}! Signed in as MENTOR.`, 'success');
+      }
+    }
+
+    // 3. Check Student List (Exact email match only)
+    if (!userObj) {
+      const studentMatch = studentsList.find(s => (s.email || '').toLowerCase() === cleanEmail);
+      if (studentMatch) {
+        if (studentMatch.status === 'Pending Approval' || studentMatch.status === 'Pending') {
+          return {
+            success: false,
+            reason: 'pending',
+            message: `Your student account is pending approval by your assigned Mentor (${studentMatch.mentor || 'Dr. Sarah Jenkins'}). Please wait for Mentor approval before signing in.`
+          };
+        }
+        if (studentMatch.status === 'Rejected') {
+          return {
+            success: false,
+            reason: 'rejected',
+            message: `Your student registration request was not approved.`
+          };
+        }
+
+        const studentData = {
+          id: studentMatch.id,
+          name: studentMatch.name,
+          email: studentMatch.email,
+          role: 'student',
+          title: 'Full Stack Web Intern',
+          university: studentMatch.university || 'Tech Institute of Science',
+          major: studentMatch.major || 'Computer Science & Engineering',
+          company: studentMatch.company || 'Apex Systems Inc.',
+          internshipTrack: studentMatch.internshipJoined || 'Full Stack Web Development',
+          avatar: studentMatch.avatar || getInitials(studentMatch.name),
+          status: 'Active'
+        };
+        userObj = studentData;
+        setUser(studentData);
+        showToast(`Welcome back, ${studentData.name}! Signed in as STUDENT.`, 'success');
+      }
+    }
+
+    if (userObj) {
+      // Store login timestamp in Firestore Database
+      try {
+        const docId = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+        setDoc(doc(db, 'users', docId), {
+          email: cleanEmail,
+          name: userObj.name,
+          role: userObj.role,
+          status: userObj.status,
+          lastLoginAt: serverTimestamp()
+        }, { merge: true }).catch(e => console.warn('Firestore login timestamp notice:', e));
+      } catch (e) {
+        console.warn('Firestore login record notice:', e);
+      }
+      return { success: true, user: userObj };
+    }
+
+    return {
+      success: false,
+      reason: 'not_found',
+      message: 'No registered account found with this email. Click "Register here" below to create an account.'
+    };
+  };
+
+  // Login / Logout & Profile Management
+  const login = (role, customEmail = null, customName = null) => {
+    return loginWithCredentials(customEmail || `${role}@internhub.edu`, '');
+  };
+
+  const updateUserProfile = (updatedFields) => {
+    if (!user) return;
+
+    const newName = updatedFields.name !== undefined ? updatedFields.name : user.name;
+    const newEmail = updatedFields.email !== undefined ? updatedFields.email : user.email;
+    const newAvatar = getInitials(newName);
+
+    const updatedUser = {
+      ...user,
+      ...updatedFields,
+      name: newName,
+      email: newEmail,
+      avatar: newAvatar
+    };
+
+    setUser(updatedUser);
+    sessionStorage.setItem('internhub_user', JSON.stringify(updatedUser));
+
+    if (user.role === 'student') {
+      setStudentsList(prev => prev.map(s => {
+        if (s.id === user.id || s.email.toLowerCase() === user.email.toLowerCase() || s.name.toLowerCase() === user.name.toLowerCase()) {
+          return {
+            ...s,
+            name: newName,
+            email: newEmail,
+            avatar: newAvatar,
+            major: updatedFields.major !== undefined ? updatedFields.major : s.major,
+            university: updatedFields.university !== undefined ? updatedFields.university : s.university
+          };
+        }
+        return s;
+      }));
+    } else if (user.role === 'mentor') {
+      setMentorsList(prev => prev.map(m => {
+        if (m.id === user.id || m.email.toLowerCase() === user.email.toLowerCase() || m.name.toLowerCase() === user.name.toLowerCase()) {
+          return {
+            ...m,
+            name: newName,
+            email: newEmail,
+            avatar: newAvatar,
+            department: updatedFields.department !== undefined ? updatedFields.department : m.department,
+            title: updatedFields.title !== undefined ? updatedFields.title : m.title
+          };
+        }
+        return m;
+      }));
+    }
+
+    showToast('Profile details updated successfully!', 'success');
   };
 
   const logout = async () => {
@@ -540,7 +987,7 @@ export const AppProvider = ({ children }) => {
   const recommendCertificate = (studentId, studentName) => {
     const targetStudent = studentsList.find(s => s.id === studentId || s.name === studentName) || {
       id: studentId || 'usr_01',
-      name: studentName || 'Alex Johnson',
+      name: studentName || 'Saloni Honrao',
       company: 'Apex Systems Inc.',
       mentor: user?.name || 'Dr. Sarah Jenkins',
       internshipJoined: 'Full Stack Web Development'
@@ -683,7 +1130,7 @@ export const AppProvider = ({ children }) => {
       id: `task_${Date.now()}`,
       title: taskData.title,
       project: taskData.project || projects[0]?.title || 'Cloud-Native SaaS Dashboard',
-      assignedTo: taskData.assignedTo || 'Alex Johnson',
+      assignedTo: taskData.assignedTo || 'Saloni Honrao',
       dueDate: taskData.dueDate || 'Oct 20, 2026',
       status: 'Pending',
       priority: taskData.priority || 'Medium',
@@ -752,8 +1199,8 @@ export const AppProvider = ({ children }) => {
     } else {
       const newSub = {
         id: `sub_${Date.now()}`,
-        studentName: user?.name || 'Alex Johnson',
-        studentAvatar: user?.avatar || 'AJ',
+        studentName: user?.name || 'Saloni Honrao',
+        studentAvatar: user?.avatar || 'SH',
         taskTitle: taskName,
         projectTitle: projectTitle,
         submittedAt: 'Just now',
@@ -774,8 +1221,8 @@ export const AppProvider = ({ children }) => {
 
     const notifTitle = isResubmission ? 'Resubmission Received 🔄' : 'New Submission Received 📬';
     const notifDesc = isResubmission 
-      ? `${user?.name || 'Alex Johnson'} resubmitted updated work for task "${taskName}"`
-      : `${user?.name || 'Alex Johnson'} submitted work for task "${taskName}"`;
+      ? `${user?.name || 'Saloni Honrao'} resubmitted updated work for task "${taskName}"`
+      : `${user?.name || 'Saloni Honrao'} submitted work for task "${taskName}"`;
 
     setNotifications(prev => [
       {
@@ -909,7 +1356,7 @@ export const AppProvider = ({ children }) => {
     const targetProgram = internships.find(i => i.id === internshipId);
     if (!targetProgram) return;
 
-    const studentName = user?.name || 'Alex Johnson';
+    const studentName = user?.name || 'Saloni Honrao';
     const studentId = user?.id || 'usr_01';
 
     // Check if request already exists for this student & program
@@ -928,8 +1375,8 @@ export const AppProvider = ({ children }) => {
     const newRequestPayload = {
       studentId: studentId,
       studentName: studentName,
-      studentEmail: user?.email || 'alex.johnson@university.edu',
-      studentAvatar: user?.avatar || 'AJ',
+      studentEmail: user?.email || 'saloni.honrao@university.edu',
+      studentAvatar: user?.avatar || 'SH',
       internshipId: targetProgram.id,
       internshipTitle: targetProgram.title,
       organization: targetProgram.organization,
@@ -1144,8 +1591,8 @@ export const AppProvider = ({ children }) => {
     const newFeedback = {
       id: `tf_${Date.now()}`,
       studentId: user?.id || 'usr_01',
-      studentName: feedbackData.anonymous ? 'Anonymous Student' : (user?.name || 'Alex Johnson'),
-      studentAvatar: feedbackData.anonymous ? 'AN' : (user?.avatar || 'AJ'),
+      studentName: feedbackData.anonymous ? 'Anonymous Student' : (user?.name || 'Saloni Honrao'),
+      studentAvatar: feedbackData.anonymous ? 'AN' : (user?.avatar || 'SH'),
       mentorId: feedbackData.mentorId || 'usr_02',
       mentorName: feedbackData.mentorName || 'Dr. Sarah Jenkins',
       rating: Number(feedbackData.rating) || 5,
@@ -1178,7 +1625,7 @@ export const AppProvider = ({ children }) => {
 
   // DIRECT MENTOR TO STUDENT FEEDBACK
   const submitDirectMentorFeedback = (feedbackData) => {
-    const studentName = feedbackData.studentName || 'Alex Johnson';
+    const studentName = feedbackData.studentName || 'Saloni Honrao';
     const taskTitle = feedbackData.taskTitle || 'Milestone Deliverable';
     const projectTitle = feedbackData.projectTitle || 'Cloud-Native SaaS Dashboard';
     const feedbackNotes = feedbackData.feedback || 'Great execution!';
@@ -1233,6 +1680,13 @@ export const AppProvider = ({ children }) => {
         user,
         login,
         logout,
+        loginWithCredentials,
+        registerAccount,
+        approveStudentAccount,
+        rejectStudentAccount,
+        approveMentorAccount,
+        rejectMentorAccount,
+        updateUserProfile,
         toast,
         showToast,
         hideToast,

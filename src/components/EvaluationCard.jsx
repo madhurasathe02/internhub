@@ -40,7 +40,7 @@ export default function EvaluationCard({ evaluation }) {
           </div>
 
           <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#29283A', margin: '4px 0 2px' }}>
-            {evaluation.studentName || 'Alex Johnson'}
+            {evaluation.studentName || 'Saloni Honrao'}
           </h3>
           <p style={{ fontSize: '0.84rem', color: '#77758A' }}>
             Track: <strong style={{ color: '#29283A' }}>{evaluation.internshipTrack || 'Full Stack Web Development'}</strong> | Supervisor: {evaluation.mentorName || 'Dr. Sarah Jenkins'}

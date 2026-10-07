@@ -13,34 +13,39 @@ export default function LandingNavbar({ onGetStarted, onLogin }) {
   };
 
   return (
-    <header className="navbar" style={{ position: 'sticky', top: 0, zIndex: 50 }}>
-      {/* Brand Logo */}
-      <div className="navbar-brand" onClick={() => scrollToSection('hero')}>
-        <div className="brand-icon-wrapper">
-          <Sparkles size={20} />
-        </div>
-        <div>
-          <span>Intern</span>
-          <span style={{ color: '#8B7CF6' }}>Hub</span>
-        </div>
-      </div>
-
-      {/* Desktop Navigation Links */}
-      <nav className="desktop-only" style={{ display: 'flex', gap: '28px', alignItems: 'center' }}>
+    <header className="navbar landing-navbar" style={{ position: 'sticky', top: 0, zIndex: 50 }}>
+      {/* Left Navigation Links (Desktop) */}
+      <nav className="desktop-only navbar-nav-left">
         <button onClick={() => scrollToSection('hero')} style={navLinkStyle}>Home</button>
         <button onClick={() => scrollToSection('features')} style={navLinkStyle}>Features</button>
         <button onClick={() => scrollToSection('how-it-works')} style={navLinkStyle}>How It Works</button>
-        <button onClick={() => scrollToSection('user-roles')} style={navLinkStyle}>For Students</button>
-        <button onClick={() => scrollToSection('user-roles')} style={navLinkStyle}>For Mentors</button>
-        <button onClick={() => scrollToSection('why-internhub')} style={navLinkStyle}>About</button>
       </nav>
 
-      {/* Desktop Action Buttons */}
-      <div className="desktop-only" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+      {/* CENTER BRAND LOGO WITH SPLASH BACKDROP */}
+      <div className="navbar-logo-center-container">
+        <div className="navbar-logo-splash-backdrop" title="InternHub Splash Screen" />
+        <div className="navbar-brand centered-logo" onClick={() => scrollToSection('hero')}>
+          <div className="brand-icon-wrapper logo-glow-effect">
+            <Sparkles size={22} className="logo-sparkle-anim" />
+          </div>
+          <div className="brand-title">
+            <span>Intern</span>
+            <span style={{ color: '#8B7CF6' }}>Hub</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Action Buttons & Links (Desktop) */}
+      <div className="desktop-only navbar-nav-right">
+        <button onClick={() => scrollToSection('user-roles')} style={navLinkStyle}>Roles</button>
+        <button onClick={() => scrollToSection('why-internhub')} style={navLinkStyle}>About</button>
+
+
         <button className="btn btn-outline btn-sm" onClick={() => onLogin && onLogin('student')}>
           <LogIn size={14} />
           <span>Login</span>
         </button>
+
         <button className="btn btn-primary btn-sm" onClick={() => onGetStarted && onGetStarted('student')}>
           <span>Get Started</span>
           <ArrowRight size={14} />
@@ -85,6 +90,7 @@ export default function LandingNavbar({ onGetStarted, onLogin }) {
           <button onClick={() => scrollToSection('why-internhub')} style={mobileNavLinkStyle}>About</button>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingTop: '12px', borderTop: '1px solid #E5E2F0' }}>
+
             <button className="btn btn-outline" onClick={() => { setMobileMenuOpen(false); if (onLogin) onLogin('student'); }}>
               Login
             </button>

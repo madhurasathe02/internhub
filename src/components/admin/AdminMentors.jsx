@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { UserCheck, UserPlus, Building2, Filter } from 'lucide-react';
+import { UserCheck, UserPlus, Building2, Filter, Clock, CheckCircle2, XCircle, ShieldCheck } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import SearchBar from '../SearchBar';
 import EmptyState from '../EmptyState';
 
 export default function AdminMentors() {
-  const { mentorsList, addMentor } = useApp();
+  const { mentorsList, addMentor, approveMentorAccount, rejectMentorAccount } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -14,6 +14,9 @@ export default function AdminMentors() {
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDept, setSelectedDept] = useState('All');
+
+  const pendingMentors = mentorsList.filter(m => m.status === 'Pending Approval');
+  const activeMentors = mentorsList.filter(m => m.status !== 'Pending Approval');
 
   const handleAdd = (e) => {
     e.preventDefault();
@@ -24,7 +27,7 @@ export default function AdminMentors() {
     setShowModal(false);
   };
 
-  const filteredMentors = mentorsList.filter(m => {
+  const filteredMentors = activeMentors.filter(m => {
     const matchesSearch = (m.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                           (m.email || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesDept = selectedDept === 'All' || (m.department || '').toLowerCase().includes(selectedDept.toLowerCase());
@@ -36,10 +39,10 @@ export default function AdminMentors() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#29283A', margin: 0 }}>
-            Faculty & Industry Mentors Directory
+            Faculty & Industry Mentors Management
           </h1>
           <p style={{ color: '#77758A', fontSize: '0.9375rem', marginTop: '4px' }}>
-            Manage academic supervisors and corporate internship mentors.
+            Approve mentor account registrations, manage academic supervisors, and corporate mentors.
           </p>
         </div>
 
@@ -48,6 +51,76 @@ export default function AdminMentors() {
           <span>Add New Mentor</span>
         </button>
       </div>
+
+      {/* PENDING MENTOR REGISTRATIONS FOR ADMIN APPROVAL */}
+      {pendingMentors.length > 0 && (
+        <div className="card" style={{ border: '2px solid #FCD34D', backgroundColor: '#FFFDF5' }}>
+          <div className="card-header" style={{ marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ padding: '8px', borderRadius: '10px', backgroundColor: '#FEF3C7', color: '#D97706' }}>
+                <Clock size={20} />
+              </div>
+              <div>
+                <h3 className="card-title" style={{ color: '#B45309' }}>
+                  Pending Mentor Approval Requests ({pendingMentors.length})
+                </h3>
+                <p style={{ fontSize: '0.8125rem', color: '#D97706', marginTop: '2px' }}>
+                  Faculty or Industry Supervisors awaiting Admin approval before gaining login access.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {pendingMentors.map(m => (
+              <div key={m.id} style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '14px',
+                padding: '14px 18px',
+                borderRadius: '14px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #FDE68A',
+                boxShadow: '0 2px 6px rgba(217, 119, 6, 0.06)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div className="avatar" style={{ backgroundColor: '#6D61D9', width: '38px', height: '38px', fontWeight: 700 }}>
+                    {m.avatar || m.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#29283A', fontSize: '0.95rem' }}>{m.name}</div>
+                    <div style={{ fontSize: '0.8125rem', color: '#77758A' }}>
+                      {m.email} • <span style={{ color: '#29283A', fontWeight: 600 }}>{m.department || 'Computer Science'}</span> ({m.title || 'Faculty Supervisor'})
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <button
+                    className="btn btn-outline btn-sm"
+                    style={{ borderColor: '#FCA5A5', color: '#DC2626' }}
+                    onClick={() => rejectMentorAccount(m.id)}
+                  >
+                    <XCircle size={14} />
+                    <span>Reject</span>
+                  </button>
+
+                  <button
+                    className="btn btn-primary btn-sm"
+                    style={{ backgroundColor: '#16A34A', borderColor: '#16A34A' }}
+                    onClick={() => approveMentorAccount(m.id)}
+                  >
+                    <CheckCircle2 size={14} />
+                    <span>Approve Mentor Account</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="card">
         {/* Search & Filter Toolbar */}

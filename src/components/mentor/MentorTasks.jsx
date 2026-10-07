@@ -9,7 +9,7 @@ export default function MentorTasks() {
   const { tasks, createTask, sendTaskReminder, projects, studentsList } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState('');
-  const [assignedTo, setAssignedTo] = useState('Alex Johnson');
+  const [assignedTo, setAssignedTo] = useState(studentsList[0]?.name || 'Saloni Honrao');
   const [project, setProject] = useState(projects[0]?.title || 'Cloud-Native SaaS Dashboard');
   const [priority, setPriority] = useState('High');
   const [dueDate, setDueDate] = useState('Oct 25, 2026');

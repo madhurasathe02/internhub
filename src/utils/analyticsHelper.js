@@ -109,7 +109,7 @@ export function getMentorAnalytics(state, mentorName = 'Dr. Sarah Jenkins') {
   };
 }
 
-export function getInternAnalytics(state, studentId = 'usr_01', studentName = 'Alex Johnson') {
+export function getInternAnalytics(state, studentId = 'usr_01', studentName = 'Saloni Honrao') {
   const {
     projects = [],
     tasks = [],

@@ -811,3 +811,428 @@
   }
 }
 
+/* ==========================================================================
+   CENTERED LOGO AT TOP OF LANDING PAGE & SPLASH BACKDROP HALO STYLES
+   ========================================================================== */
+
+.landing-navbar {
+  display: grid !important;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.navbar-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: flex-start;
+}
+
+.navbar-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: flex-end;
+}
+
+/* CENTERED LOGO CONTAINER WITH SPLASH SCREEN HALO BACKDROP */
+.navbar-logo-center-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 16px;
+}
+
+/* Splash Backdrop Shield behind the Logo */
+.navbar-logo-splash-backdrop {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 48px;
+  background: radial-gradient(ellipse at center, rgba(139, 124, 246, 0.35) 0%, rgba(124, 169, 248, 0.2) 60%, transparent 80%);
+  border-radius: 30px;
+  filter: blur(10px);
+  pointer-events: none;
+  z-index: 1;
+  animation: logoSplashPulse 3.5s ease-in-out infinite alternate;
+}
+
+.navbar-brand.centered-logo {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(229, 226, 240, 0.8);
+  box-shadow: 0 4px 18px rgba(139, 124, 246, 0.15);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar-brand.centered-logo:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: #FFFFFF;
+  box-shadow: 0 6px 24px rgba(139, 124, 246, 0.25);
+  border-color: var(--primary);
+}
+
+.logo-glow-effect {
+  position: relative;
+  background: linear-gradient(135deg, #8B7CF6 0%, #6852F6 60%, #7CA9F8 100%) !important;
+  box-shadow: 0 4px 14px rgba(139, 124, 246, 0.4) !important;
+}
+
+.logo-sparkle-anim {
+  animation: logoSparkleSpin 4s ease-in-out infinite alternate;
+}
+
+.brand-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.splash-trigger-btn {
+  border-radius: 20px !important;
+  font-size: 0.8125rem !important;
+  background-color: var(--surface-secondary) !important;
+  border: 1px solid var(--border-secondary) !important;
+  transition: all 0.2s ease !important;
+}
+
+.splash-trigger-btn:hover {
+  background-color: #E6E3FA !important;
+  transform: translateY(-1px);
+}
+
+/* KEYFRAMES */
+@keyframes logoSplashPulse {
+  0% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+}
+
+@keyframes logoSparkleSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.15); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* RESPONSIVE NAVBAR LAYOUT */
+@media (max-width: 768px) {
+  .landing-navbar {
+    display: flex !important;
+    justify-content: space-between;
+    padding: 0 16px;
+    height: 68px;
+  }
+
+  .navbar-logo-center-container {
+    padding: 0;
+  }
+
+  .navbar-brand.centered-logo {
+    padding: 4px 10px;
+  }
+
+  .brand-title {
+    font-size: 1.125rem;
+  }
+}
+
+/* ==========================================================================
+   VIDEO HERO SECTION & CENTERED LOGO SHIELD OVERLAY STYLES
+   ========================================================================== */
+
+.video-hero-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 580px;
+  height: 72vh;
+  max-height: 720px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background-color: #0F0D1B;
+}
+
+/* Video Background */
+.hero-video-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Contrast Overlay (Disabled for 100% original video quality) */
+.hero-video-overlay {
+  display: none !important;
+}
+
+/* Center Emblem Container */
+.hero-center-emblem-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  width: 100%;
+  max-width: 840px;
+}
+
+.hero-logo-badge-backdrop {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(139, 124, 246, 0.45) 0%, rgba(124, 169, 248, 0.25) 50%, transparent 75%);
+  border-radius: 50%;
+  filter: blur(35px);
+  pointer-events: none;
+  z-index: 1;
+  animation: heroPulseAura 4s ease-in-out infinite alternate;
+}
+
+/* Centered Logo Emblem Overlay (Clean floating without box) */
+.hero-logo-emblem-card {
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 680px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-logo-emblem-card:hover {
+  transform: translateY(-4px) scale(1.015);
+}
+
+.hero-logo-icon-box {
+  width: 96px;
+  height: 96px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #8B7CF6 0%, #6852F6 50%, #7CA9F8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 16px 40px rgba(139, 124, 246, 0.55), inset 0 2px 5px rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+  animation: heroLogoFloat 3.5s ease-in-out infinite alternate;
+}
+
+.hero-logo-sparkle {
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+  animation: logoSparkleSpin 6s linear infinite;
+}
+
+.hero-logo-title-group {
+  font-size: 3.25rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.hero-title-intern {
+  color: #FFFFFF;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.hero-title-hub {
+  background: linear-gradient(135deg, #A78BFA 0%, #7CA9F8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 25px rgba(167, 139, 250, 0.5);
+}
+
+/* Tagline Pill */
+.hero-logo-tagline-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #E2E0F5;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.pill-line-left, .pill-line-right {
+  width: 32px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #8B7CF6 100%);
+  border-radius: 2px;
+}
+
+.pill-line-right {
+  background: linear-gradient(90deg, #8B7CF6 0%, transparent 100%);
+}
+
+.hero-logo-subtext {
+  font-size: 0.95rem;
+  color: #D3CEEE;
+  font-weight: 500;
+  line-height: 1.5;
+  margin-bottom: 28px;
+  max-width: 440px;
+}
+
+.hero-center-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero-cta-btn {
+  padding: 14px 32px !important;
+  font-size: 1rem !important;
+  border-radius: 24px !important;
+  box-shadow: 0 8px 24px rgba(139, 124, 246, 0.45) !important;
+}
+
+.hero-cta-btn-outline {
+  padding: 14px 28px !important;
+  font-size: 1rem !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(10px);
+}
+
+.hero-cta-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Curved Wave Divider at Bottom of Hero */
+.hero-wave-divider {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.hero-wave-divider svg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+
+@keyframes heroPulseAura {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 0.9; }
+}
+
+@keyframes heroLogoFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-10px); }
+}
+
+/* RESPONSIVE VIDEO HERO DESIGN */
+@media (max-width: 768px) {
+  .video-hero-wrapper {
+    min-height: 520px;
+    height: 75vh;
+  }
+
+  .hero-logo-emblem-card {
+    padding: 32px 20px;
+    border-radius: 24px;
+  }
+
+  .hero-logo-icon-box {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+
+  .hero-logo-title-group {
+    font-size: 2.5rem;
+  }
+
+  .hero-logo-tagline-pill {
+    font-size: 0.75rem;
+  }
+
+  .hero-logo-subtext {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  .hero-center-cta-group {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .hero-cta-btn, .hero-cta-btn-outline {
+    width: 100%;
+  }
+
+  .hero-wave-divider {
+    height: 50px;
+  }
+  .hero-wave-divider svg {
+    height: 50px;
+  }
+}
+
+
+

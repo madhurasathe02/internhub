@@ -32,7 +32,7 @@ export default function MentorFeedback() {
 
   // New Feedback Modal state
   const [isNewFeedbackModalOpen, setIsNewFeedbackModalOpen] = useState(false);
-  const [targetStudent, setTargetStudent] = useState(studentsList[0]?.name || 'Alex Johnson');
+  const [targetStudent, setTargetStudent] = useState(studentsList[0]?.name || 'Saloni Honrao');
   const [targetTaskTitle, setTargetTaskTitle] = useState('Full Stack Web Architecture & State Sync');
   const [targetProjectTitle, setTargetProjectTitle] = useState('Cloud-Native SaaS Dashboard');
   const [targetGrade, setTargetGrade] = useState('95');
@@ -364,7 +364,7 @@ export default function MentorFeedback() {
                     ))
                   ) : (
                     <>
-                      <option value="Alex Johnson">Alex Johnson</option>
+                      <option value="Saloni Honrao">Saloni Honrao</option>
                       <option value="Liam Chen">Liam Chen</option>
                       <option value="Maya Patel">Maya Patel</option>
                     </>

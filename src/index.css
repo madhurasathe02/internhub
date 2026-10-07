@@ -1,67 +1,82 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Color System */
-  --primary: #8B7CF6;
-  --primary-hover: #7C6BF5;
+  /* Color System - Dreamy Pastel Glassmorphism Palette */
+  --primary: #6C47FF;
+  --primary-gradient: linear-gradient(135deg, #8C65F7 0%, #6B42EE 100%);
+  --primary-hover: #5A35E0;
   --primary-text-button: #FFFFFF;
 
-  --secondary: #7CA9F8;
-  --secondary-hover: #6897E8;
+  --secondary: #3B82F6;
+  --secondary-hover: #2563EB;
 
-  --accent: #E9A6C7;
-  --accent-light: #FDF0F6;
+  --accent-pink: #EC4899;
+  --accent-purple: #9B7BFF;
+  --accent-green: #10B981;
+  --accent-orange: #F97316;
 
-  --bg-app: #F7F6FC;
-  --surface-card: #FFFFFF;
-  --surface-secondary: #EEECFA;
+  --bg-app: #F4F0FE;
+  --bg-mesh: radial-gradient(at 10% 10%, #E2EAFF 0px, transparent 50%), 
+              radial-gradient(at 90% 10%, #EAE2FF 0px, transparent 50%), 
+              radial-gradient(at 50% 50%, #F5F0FF 0px, transparent 50%), 
+              radial-gradient(at 10% 90%, #FDEBF4 0px, transparent 50%), 
+              radial-gradient(at 90% 90%, #EBF4FE 0px, transparent 50%), 
+              #F4F0FE;
 
-  --text-main: #29283A;
-  --text-secondary: #77758A;
-  --text-placeholder: #9A98A8;
-  --text-purple: #6D61D9;
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-bg-hover: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.85);
+  --glass-border-subtle: rgba(225, 220, 248, 0.6);
 
-  --border-light: #E5E2F0;
-  --border-secondary: #DDD8F2;
+  --surface-card: rgba(255, 255, 255, 0.7);
+  --surface-secondary: rgba(240, 235, 255, 0.7);
+
+  --text-main: #1E1B3A;
+  --text-secondary: #79759B;
+  --text-placeholder: #A19DBE;
+  --text-purple: #6C47FF;
+
+  --border-light: rgba(255, 255, 255, 0.8);
+  --border-secondary: rgba(220, 215, 245, 0.7);
 
   /* Status Palette */
-  --status-completed-bg: #E4F5EA;
-  --status-completed-text: #4F9D69;
+  --status-completed-bg: rgba(209, 250, 229, 0.8);
+  --status-completed-text: #059669;
 
-  --status-in-progress-bg: #E8E5FC;
-  --status-in-progress-text: #7165D5;
+  --status-in-progress-bg: rgba(224, 215, 255, 0.8);
+  --status-in-progress-text: #6C47FF;
 
-  --status-pending-bg: #FFF3D9;
-  --status-pending-text: #B98532;
+  --status-pending-bg: rgba(254, 243, 199, 0.8);
+  --status-pending-text: #D97706;
 
-  --status-under-review-bg: #E2F0FC;
-  --status-under-review-text: #5688B5;
+  --status-under-review-bg: rgba(219, 234, 254, 0.8);
+  --status-under-review-text: #2563EB;
 
-  --status-changes-requested-bg: #FBE7E8;
-  --status-changes-requested-text: #B96A70;
+  --status-changes-requested-bg: rgba(254, 226, 226, 0.8);
+  --status-changes-requested-text: #DC2626;
 
-  --danger-bg: #FBE7E8;
-  --danger-main: #E88989;
-  --danger-text: #B96A70;
+  --danger-bg: rgba(254, 226, 226, 0.8);
+  --danger-main: #EC4899;
+  --danger-text: #BE185D;
 
-  /* Elevational Shadows */
-  --shadow-card: 0 4px 20px rgba(70, 60, 120, 0.08);
-  --shadow-hover: 0 8px 28px rgba(70, 60, 120, 0.12);
-  --shadow-sm: 0 2px 8px rgba(70, 60, 120, 0.05);
-  --shadow-focus: 0 0 0 4px rgba(139, 124, 246, 0.18);
-  --shadow-dropdown: 0 10px 30px rgba(41, 40, 58, 0.1);
+  /* Elevational Glass Shadows */
+  --shadow-card: 0 10px 30px rgba(120, 110, 180, 0.08);
+  --shadow-hover: 0 14px 36px rgba(110, 95, 180, 0.14);
+  --shadow-sm: 0 4px 12px rgba(120, 110, 180, 0.05);
+  --shadow-focus: 0 0 0 4px rgba(108, 71, 255, 0.15);
+  --shadow-dropdown: 0 16px 40px rgba(40, 35, 75, 0.12);
 
   /* Typography & Layout */
   --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --radius-button: 12px;
-  --radius-card: 16px;
-  --radius-sm: 8px;
+  --radius-button: 9999px;
+  --radius-card: 24px;
+  --radius-sm: 12px;
   --radius-full: 9999px;
 
   /* Soft Gradients */
-  --grad-hero: linear-gradient(135deg, rgba(238, 236, 250, 0.9) 0%, rgba(226, 240, 252, 0.8) 100%);
-  --grad-accent-card: linear-gradient(135deg, rgba(139, 124, 246, 0.08) 0%, rgba(124, 169, 248, 0.08) 100%);
-  --grad-badge: linear-gradient(135deg, #8B7CF6 0%, #7CA9F8 100%);
+  --grad-hero: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(240, 235, 255, 0.65) 100%);
+  --grad-accent-card: linear-gradient(135deg, rgba(108, 71, 255, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+  --grad-badge: linear-gradient(135deg, #8C65F7 0%, #6B42EE 100%);
 }
 
 * {
@@ -72,7 +87,8 @@
 
 body {
   font-family: var(--font-family);
-  background-color: var(--bg-app);
+  background: var(--bg-mesh);
+  background-attachment: fixed;
   color: var(--text-main);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -112,11 +128,11 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-app);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D5D1E8;
+  background: rgba(180, 175, 215, 0.5);
   border-radius: var(--radius-full);
 }
 
@@ -126,16 +142,19 @@ a:hover {
 
 /* Base utility classes */
 .soft-card {
-  background: var(--surface-card);
-  border: 1px solid var(--border-light);
+  background: var(--glass-bg);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
 }
 
 .soft-card-hover:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-hover);
+  background: var(--glass-bg-hover);
 }
 
 .badge {

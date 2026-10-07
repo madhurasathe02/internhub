@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Settings, Save, Shield } from 'lucide-react';
+import ChangePasswordCard from '../ChangePasswordCard';
 
 export default function AdminSettings() {
   const [saved, setSaved] = useState(false);
@@ -14,10 +15,10 @@ export default function AdminSettings() {
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       <div>
         <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#29283A', margin: 0 }}>
-          System Settings & Platform Parameters
+          System Settings & Platform Governance
         </h1>
         <p style={{ color: '#77758A', fontSize: '0.9375rem', marginTop: '4px' }}>
-          Configure system notifications, academic grading thresholds, and security policies.
+          Configure system parameters, administrator password security, and academic policies.
         </p>
       </div>
 
@@ -51,6 +52,13 @@ export default function AdminSettings() {
           </div>
         </form>
       </div>
+
+      {/* Change Password Option */}
+      <ChangePasswordCard 
+        title="Change Admin Password" 
+        subtitle="Update the administrator credential password for Madhura Sathe"
+      />
     </div>
   );
 }
+

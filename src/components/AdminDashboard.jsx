@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   Building2, 
@@ -13,6 +14,7 @@ import {
 import { MOCK_STATS } from '../mockData';
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const [roleFilter, setRoleFilter] = useState('All');
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [newUserName, setNewUserName] = useState('');
@@ -20,7 +22,7 @@ export default function AdminDashboard() {
   const [newUserRole, setNewUserRole] = useState('student');
 
   const [users, setUsers] = useState([
-    { id: 1, name: 'Alex Johnson', email: 'alex.johnson@univ.edu', role: 'student', company: 'Apex Systems', status: 'Active' },
+    { id: 1, name: 'Saloni Honrao', email: 'saloni.honrao@university.edu', role: 'student', company: 'Apex Systems Inc.', status: 'Active' },
     { id: 2, name: 'Dr. Sarah Jenkins', email: 's.jenkins@internhub.edu', role: 'mentor', company: 'CS Dept Head', status: 'Active' },
     { id: 3, name: 'Maya Patel', email: 'm.patel@univ.edu', role: 'student', company: 'FinTech Dynamics', status: 'Active' },
     { id: 4, name: 'Elena Rostova', email: 'elena@fintechdyn.com', role: 'mentor', company: 'FinTech Lead', status: 'Active' },
@@ -44,6 +46,23 @@ export default function AdminDashboard() {
     setNewUserEmail('');
     setShowAddUserModal(false);
   };
+
+  const getAdminCardRoute = (type) => {
+    switch (type) {
+      case 'students': return '/admin/students';
+      case 'mentors': return '/admin/mentors';
+      case 'completion': return '/admin/internships';
+      case 'submissions': return '/admin/tasks';
+      default: return '/admin/students';
+    }
+  };
+
+  const cardStyles = [
+    { bg: 'rgba(240, 236, 255, 0.75)', iconBg: '#E5DCFF', color: '#6C47FF' },
+    { bg: 'rgba(230, 245, 255, 0.75)', iconBg: '#D6F0FF', color: '#3B82F6' },
+    { bg: 'rgba(230, 250, 240, 0.75)', iconBg: '#D1FAE5', color: '#10B981' },
+    { bg: 'rgba(255, 235, 245, 0.75)', iconBg: '#FFE0EC', color: '#EC4899' },
+  ];
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
@@ -77,23 +96,51 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Metric Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-        {MOCK_STATS.admin.map((stat, idx) => (
-          <div key={idx} className="stat-card">
-            <div className={`stat-icon ${stat.color}`}>
-              {stat.type === 'students' && <Users size={22} />}
-              {stat.type === 'mentors' && <Building2 size={22} />}
-              {stat.type === 'completion' && <BarChart2 size={22} />}
-              {stat.type === 'submissions' && <CheckCircle2 size={22} />}
+      {/* Metric Cards (Soft Pastel Glass Style) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '16px' }}>
+        {MOCK_STATS.admin.map((stat, idx) => {
+          const styleConfig = cardStyles[idx % cardStyles.length];
+          return (
+            <div 
+              key={idx} 
+              onClick={() => navigate(getAdminCardRoute(stat.type))}
+              style={{
+                background: styleConfig.bg,
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                borderRadius: '22px',
+                border: '1px solid rgba(255, 255, 255, 0.9)',
+                padding: '22px 20px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxShadow: '0 8px 24px rgba(108, 71, 255, 0.06)',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease, boxShadow 0.2s ease'
+              }}
+              className="soft-card-hover"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: styleConfig.iconBg, color: styleConfig.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {stat.type === 'students' && <Users size={20} />}
+                  {stat.type === 'mentors' && <Building2 size={20} />}
+                  {stat.type === 'completion' && <BarChart2 size={20} />}
+                  {stat.type === 'submissions' && <CheckCircle2 size={20} />}
+                </div>
+              </div>
+              <div style={{ marginTop: '16px' }}>
+                <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{stat.value}</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>{stat.label}</div>
+                <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>{stat.change}</div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(255, 255, 255, 0.8)', color: styleConfig.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
+                  →
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="stat-value">{stat.value}</div>
-              <div className="stat-label">{stat.label}</div>
-              <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '4px' }}>{stat.change}</div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Program Analytics & Department Chart */}
