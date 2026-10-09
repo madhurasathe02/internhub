@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Megaphone, Plus } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import ModalPortal from '../ModalPortal';
 
 export default function AdminAnnouncements() {
   const { announcements, createAnnouncement } = useApp();
@@ -55,36 +56,38 @@ export default function AdminAnnouncements() {
       </div>
 
       {showModal && (
-        <div className="modal-overlay animate-fade-in" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3 className="modal-title">Publish Broadcast Announcement</h3>
-              <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+        <ModalPortal>
+          <div className="modal-overlay" onClick={() => setShowModal(false)}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3 className="modal-title">Publish Broadcast Announcement</h3>
+                <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+              </div>
+              <form onSubmit={handleCreate}>
+                <div className="form-group">
+                  <label className="form-label">Announcement Title</label>
+                  <input type="text" className="form-input" required value={title} onChange={e => setTitle(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Target Audience</label>
+                  <select className="form-select" value={target} onChange={e => setTarget(e.target.value)}>
+                    <option value="All">All Users (Students & Mentors)</option>
+                    <option value="Students">Students Only</option>
+                    <option value="Mentors">Mentors Only</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Announcement Content</label>
+                  <textarea className="form-textarea" rows="4" required value={content} onChange={e => setContent(e.target.value)} />
+                </div>
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+                  <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
+                  <button type="submit" className="btn btn-primary">Publish Announcement</button>
+                </div>
+              </form>
             </div>
-            <form onSubmit={handleCreate}>
-              <div className="form-group">
-                <label className="form-label">Announcement Title</label>
-                <input type="text" className="form-input" required value={title} onChange={e => setTitle(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Target Audience</label>
-                <select className="form-select" value={target} onChange={e => setTarget(e.target.value)}>
-                  <option value="All">All Users (Students & Mentors)</option>
-                  <option value="Students">Students Only</option>
-                  <option value="Mentors">Mentors Only</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Announcement Content</label>
-                <textarea className="form-textarea" rows="4" required value={content} onChange={e => setContent(e.target.value)} />
-              </div>
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
-                <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">Publish Announcement</button>
-              </div>
-            </form>
           </div>
-        </div>
+        </ModalPortal>
       )}
     </div>
   );

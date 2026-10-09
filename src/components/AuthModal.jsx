@@ -5,8 +5,8 @@ import { useApp } from '../context/AppContext';
 export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   const { loginWithCredentials, registerAccount } = useApp();
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('saloni.honrao@university.edu');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [registerRole, setRegisterRole] = useState('student');
   const [errorMsg, setErrorMsg] = useState('');
@@ -20,7 +20,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
     setPendingMsg('');
 
     if (isLogin) {
-      const res = loginWithCredentials(email, password);
+      const res = await loginWithCredentials(email, password);
       if (res.success) {
         if (onLoginSuccess) onLoginSuccess(res.user.role, res.user.email, res.user.name);
         onClose();

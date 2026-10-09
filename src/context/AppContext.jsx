@@ -1,15 +1,33 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
-import { signOut } from 'firebase/auth';
-import { collection, addDoc, onSnapshot, doc, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { 
-  MOCK_USER, 
-  MOCK_MENTOR, 
-  MOCK_STATS, 
-  MOCK_PROJECTS, 
-  MOCK_TASKS, 
-  MOCK_SUBMISSIONS, 
-  MOCK_NOTIFICATIONS 
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+  onAuthStateChanged
+} from 'firebase/auth';
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  doc,
+  updateDoc,
+  setDoc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  serverTimestamp
+} from 'firebase/firestore';
+import {
+  MOCK_USER,
+  MOCK_MENTOR,
+  MOCK_STATS,
+  MOCK_PROJECTS,
+  MOCK_TASKS,
+  MOCK_SUBMISSIONS,
+  MOCK_NOTIFICATIONS
 } from '../mockData';
 
 const AppContext = createContext();
@@ -462,6 +480,24 @@ export const AppProvider = ({ children }) => {
     }
   }, []);
 
+  // Firebase Authentication State Observer
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          const userDocRef = doc(db, 'users', firebaseUser.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            setUser({ id: firebaseUser.uid, ...userDoc.data() });
+          }
+        } catch (err) {
+          console.warn('onAuthStateChanged profile fetch notice:', err);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   // Sync state changes to sessionStorage for session persistence
   useEffect(() => {
     if (user) sessionStorage.setItem('internhub_user', JSON.stringify(user));
@@ -597,238 +633,289 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Unified Registration Function (PERSISTED TO FIRESTORE DB)
+  // Single Pre-configured Admin Email Constant
+  const DEFAULT_ADMIN_EMAIL = 'admin@internhub.edu';
+
+  // Real Firebase Registration Function
   const registerAccount = async ({ name, email, password, role }) => {
     const cleanEmail = (email || '').trim().toLowerCase();
     const cleanName = (name || '').trim();
+    const userRole = role || 'student';
 
-    if (role === 'admin') {
-      return { success: false, message: 'Only one system administrator is allowed (Madhura Sathe).' };
+    if (!cleanEmail || !password || !cleanName) {
+      return { success: false, message: 'Please fill in all required fields.' };
     }
 
-    const existsStudent = studentsList.some(s => s.email.toLowerCase() === cleanEmail);
-    const existsMentor = mentorsList.some(m => m.email.toLowerCase() === cleanEmail);
-    const isAdminEmail = cleanEmail === 'madhu2@gmail.com' || cleanEmail === 'admin@internhub.edu';
-
-    if (existsStudent || existsMentor || isAdminEmail) {
-      return { success: false, message: 'An account with this email address already exists. Please sign in.' };
+    if (userRole === 'admin') {
+      return { success: false, message: 'Admin account registration is prohibited. Only one system administrator exists.' };
     }
 
-    // Write user registration record to Firestore Database 'users' collection
-    const docId = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
     try {
-      await setDoc(doc(db, 'users', docId), {
-        id: docId,
+      const userCredential = await createUserWithEmailAndPassword(auth, cleanEmail, password);
+      const uid = userCredential.user.uid;
+
+      const userProfile = {
+        id: uid,
+        uid: uid,
         name: cleanName,
         email: cleanEmail,
-        role,
-        status: 'Pending Approval',
-        company: role === 'student' ? 'Apex Systems Inc.' : undefined,
-        mentor: role === 'student' ? 'Dr. Sarah Jenkins' : undefined,
-        department: role === 'mentor' ? 'Computer Science & Software' : undefined,
-        title: role === 'mentor' ? 'Faculty Supervisor' : undefined,
+        role: userRole,
+        status: 'Pending Approval', // Requires Mentor/Admin approval
+        avatar: getInitials(cleanName),
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
-      }, { merge: true });
-    } catch (err) {
-      console.warn('Firestore registration doc save notice:', err);
-    }
-
-    if (role === 'mentor') {
-      const newMentor = {
-        id: docId,
-        name: cleanName,
-        email: cleanEmail,
-        role: 'mentor',
-        department: 'Computer Science & Software',
-        assignedCount: 0,
-        title: 'Faculty Supervisor',
-        status: 'Pending Approval',
-        avatar: getInitials(cleanName)
       };
-      setMentorsList(prev => [newMentor, ...prev]);
 
-      setNotifications(prev => [
-        {
-          id: `notif_${Date.now()}`,
-          title: 'New Mentor Registration Pending Approval 👨‍🏫',
-          desc: `${cleanName} registered as Mentor. Admin approval required before account activation.`,
-          time: 'Just now',
-          unread: true,
-          type: 'info',
-          targetRole: 'admin'
-        },
-        ...prev
-      ]);
+      if (userRole === 'mentor') {
+        userProfile.department = 'Computer Science & Software';
+        userProfile.title = 'Faculty Supervisor';
+        userProfile.assignedCount = 0;
+        setMentorsList(prev => [userProfile, ...prev]);
 
-      return {
-        success: true,
-        message: `Account created! Your mentor account is pending approval by Admin (Madhura Sathe). Please wait for Admin approval before signing in.`
-      };
-    } else {
-      const newStudent = {
-        id: docId,
-        name: cleanName,
-        email: cleanEmail,
-        role: 'student',
-        company: 'Apex Systems Inc.',
-        status: 'Pending Approval',
-        mentor: 'Dr. Sarah Jenkins',
-        internshipJoined: 'Full Stack Web Development',
-        avatar: getInitials(cleanName),
-        university: 'Tech Institute of Science',
-        major: 'Computer Science & Engineering'
-      };
-      setStudentsList(prev => [newStudent, ...prev]);
+        setNotifications(prev => [
+          {
+            id: `notif_${Date.now()}`,
+            title: 'New Mentor Registration Pending Approval 👨‍🏫',
+            desc: `${cleanName} registered as Mentor. Admin approval required before account activation.`,
+            time: 'Just now',
+            unread: true,
+            type: 'info',
+            targetRole: 'admin'
+          },
+          ...prev
+        ]);
 
-      setNotifications(prev => [
-        {
-          id: `notif_${Date.now()}`,
-          title: 'New Student Registration Pending Approval 🎓',
-          desc: `${cleanName} registered as Student. Mentor Dr. Sarah Jenkins approval required before account activation.`,
-          time: 'Just now',
-          unread: true,
-          type: 'info',
-          targetRole: 'mentor'
-        },
-        ...prev
-      ]);
+        await setDoc(doc(db, 'users', uid), userProfile, { merge: true });
 
-      return {
-        success: true,
-        message: `Account created! Your student account is pending approval by Mentor (Dr. Sarah Jenkins). Please wait for Mentor approval before signing in.`
-      };
+        return {
+          success: true,
+          pending: true,
+          message: `Account created! Your mentor account is pending approval by Admin. Please wait for Admin approval before signing in.`
+        };
+      } else {
+        userProfile.company = 'Apex Systems Inc.';
+        userProfile.mentor = 'Dr. Sarah Jenkins';
+        userProfile.internshipJoined = 'Full Stack Web Development';
+        userProfile.university = 'Tech Institute of Science';
+        userProfile.major = 'Computer Science & Engineering';
+        setStudentsList(prev => [userProfile, ...prev]);
+
+        setNotifications(prev => [
+          {
+            id: `notif_${Date.now()}`,
+            title: 'New Student Registration Pending Approval 🎓',
+            desc: `${cleanName} registered as Student. Mentor approval required before account activation.`,
+            time: 'Just now',
+            unread: true,
+            type: 'info',
+            targetRole: 'mentor'
+          },
+          ...prev
+        ]);
+
+        await setDoc(doc(db, 'users', uid), userProfile, { merge: true });
+
+        return {
+          success: true,
+          pending: true,
+          message: `Account created! Your student account is pending approval by Mentor (Dr. Sarah Jenkins). Please wait for Mentor approval before signing in.`
+        };
+      }
+    } catch (error) {
+      console.warn("Firebase Auth registration error:", error.code, error.message);
+
+      if (error.code === 'auth/email-already-in-use') {
+        return { success: false, message: 'An account with this email address already exists. Please sign in.' };
+      }
+      if (error.code === 'auth/weak-password') {
+        return { success: false, message: 'Password should be at least 6 characters long.' };
+      }
+      if (error.code === 'auth/invalid-email') {
+        return { success: false, message: 'Please enter a valid email address.' };
+      }
+
+      return { success: false, message: error.message || 'Registration failed. Please try again.' };
     }
   };
 
-  // Unified Sign In / Login Function (EXACT EMAIL MATCH REQUIRED & STORED TO DB)
-  const loginWithCredentials = (email, password) => {
+  // Real Firebase Sign In / Login Function
+  const loginWithCredentials = async (email, password) => {
     const cleanEmail = (email || '').trim().toLowerCase();
+    const rawPassword = password || '';
 
     if (!cleanEmail) {
-      return { success: false, reason: 'not_found', message: 'Please enter your registered email address.' };
+      return { success: false, message: 'Please enter your registered email address.' };
     }
 
-    let userObj = null;
-
-    // 1. Check Single Admin (Madhura Sathe)
-    if (
-      cleanEmail === 'madhu2@gmail.com' ||
-      cleanEmail === 'admin@internhub.edu' || 
-      cleanEmail === 'admin' || 
-      cleanEmail === 'm.sathe@univ.edu' || 
-      cleanEmail.includes('madhu') || 
-      cleanEmail.includes('madhura')
-    ) {
-      const adminData = {
-        id: 'usr_admin',
-        name: 'Madhura Sathe',
-        email: 'madhu2@gmail.com',
-        role: 'admin',
-        title: 'System Administrator & Institutional Director',
-        avatar: 'MS',
-        status: 'Active'
-      };
-      userObj = adminData;
-      setUser(adminData);
-      showToast('Welcome back, Madhura Sathe! Signed in as ADMIN.', 'success');
-    }
-
-    // 2. Check Mentor List (Exact email match only)
-    if (!userObj) {
-      const mentorMatch = mentorsList.find(m => (m.email || '').toLowerCase() === cleanEmail);
-      if (mentorMatch) {
-        if (mentorMatch.status === 'Pending Approval' || mentorMatch.status === 'Pending') {
-          return {
-            success: false,
-            reason: 'pending',
-            message: `Your mentor account is pending approval by the Admin (Madhura Sathe). Please wait for Admin approval before signing in.`
-          };
-        }
-        if (mentorMatch.status === 'Rejected') {
-          return {
-            success: false,
-            reason: 'rejected',
-            message: `Your mentor registration request was not approved.`
-          };
-        }
-
-        const mentorData = {
-          id: mentorMatch.id,
-          name: mentorMatch.name,
-          email: mentorMatch.email,
-          role: 'mentor',
-          title: mentorMatch.title || 'Senior Software Architect & Supervisor',
-          department: mentorMatch.department || 'Computer Science & AI Lab',
-          avatar: mentorMatch.avatar || getInitials(mentorMatch.name),
-          status: 'Active'
-        };
-        userObj = mentorData;
-        setUser(mentorData);
-        showToast(`Welcome back, ${mentorData.name}! Signed in as MENTOR.`, 'success');
-      }
-    }
-
-    // 3. Check Student List (Exact email match only)
-    if (!userObj) {
-      const studentMatch = studentsList.find(s => (s.email || '').toLowerCase() === cleanEmail);
-      if (studentMatch) {
-        if (studentMatch.status === 'Pending Approval' || studentMatch.status === 'Pending') {
-          return {
-            success: false,
-            reason: 'pending',
-            message: `Your student account is pending approval by your assigned Mentor (${studentMatch.mentor || 'Dr. Sarah Jenkins'}). Please wait for Mentor approval before signing in.`
-          };
-        }
-        if (studentMatch.status === 'Rejected') {
-          return {
-            success: false,
-            reason: 'rejected',
-            message: `Your student registration request was not approved.`
-          };
-        }
-
-        const studentData = {
-          id: studentMatch.id,
-          name: studentMatch.name,
-          email: studentMatch.email,
-          role: 'student',
-          title: 'Full Stack Web Intern',
-          university: studentMatch.university || 'Tech Institute of Science',
-          major: studentMatch.major || 'Computer Science & Engineering',
-          company: studentMatch.company || 'Apex Systems Inc.',
-          internshipTrack: studentMatch.internshipJoined || 'Full Stack Web Development',
-          avatar: studentMatch.avatar || getInitials(studentMatch.name),
-          status: 'Active'
-        };
-        userObj = studentData;
-        setUser(studentData);
-        showToast(`Welcome back, ${studentData.name}! Signed in as STUDENT.`, 'success');
-      }
-    }
-
-    if (userObj) {
-      // Store login timestamp in Firestore Database
+    // 1. Try Firebase Auth standard sign-in first if password is provided
+    if (rawPassword) {
       try {
-        const docId = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
-        setDoc(doc(db, 'users', docId), {
-          email: cleanEmail,
-          name: userObj.name,
-          role: userObj.role,
-          status: userObj.status,
-          lastLoginAt: serverTimestamp()
-        }, { merge: true }).catch(e => console.warn('Firestore login timestamp notice:', e));
-      } catch (e) {
-        console.warn('Firestore login record notice:', e);
+        const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, rawPassword);
+        const firebaseUser = userCredential.user;
+
+        let userProfile = null;
+        try {
+          const userDocRef = doc(db, 'users', firebaseUser.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            userProfile = { id: firebaseUser.uid, ...userDoc.data() };
+          }
+        } catch (err) {
+          console.warn('Firestore user fetch notice:', err);
+        }
+
+        if (!userProfile) {
+          const mentorMatch = mentorsList.find(m => (m.email || '').toLowerCase() === cleanEmail);
+          const studentMatch = studentsList.find(s => (s.email || '').toLowerCase() === cleanEmail);
+          const isInitialAdmin = cleanEmail === DEFAULT_ADMIN_EMAIL;
+
+          if (isInitialAdmin) {
+            userProfile = {
+              id: firebaseUser.uid,
+              uid: firebaseUser.uid,
+              name: 'Madhura Sathe',
+              email: cleanEmail,
+              role: 'admin',
+              title: 'System Administrator & Institutional Director',
+              avatar: 'MS',
+              status: 'Active'
+            };
+          } else if (mentorMatch) {
+            userProfile = {
+              id: firebaseUser.uid,
+              uid: firebaseUser.uid,
+              name: mentorMatch.name,
+              email: cleanEmail,
+              role: 'mentor',
+              title: mentorMatch.title || 'Senior Software Architect',
+              department: mentorMatch.department || 'Computer Science & AI',
+              avatar: mentorMatch.avatar || getInitials(mentorMatch.name),
+              status: mentorMatch.status || 'Active'
+            };
+          } else if (studentMatch) {
+            userProfile = {
+              id: firebaseUser.uid,
+              uid: firebaseUser.uid,
+              name: studentMatch.name,
+              email: cleanEmail,
+              role: 'student',
+              title: 'Full Stack Web Intern',
+              university: studentMatch.university || 'Tech Institute of Science',
+              major: studentMatch.major || 'Computer Science & Engineering',
+              company: studentMatch.company || 'Apex Systems Inc.',
+              internshipTrack: studentMatch.internshipJoined || 'Full Stack Web Development',
+              avatar: studentMatch.avatar || getInitials(studentMatch.name),
+              status: studentMatch.status || 'Active'
+            };
+          } else {
+            userProfile = {
+              id: firebaseUser.uid,
+              uid: firebaseUser.uid,
+              name: cleanEmail.split('@')[0],
+              email: cleanEmail,
+              role: 'student',
+              title: 'Full Stack Web Intern',
+              avatar: getInitials(cleanEmail.split('@')[0]),
+              status: 'Active'
+            };
+          }
+
+          try {
+            await setDoc(doc(db, 'users', firebaseUser.uid), userProfile, { merge: true });
+          } catch (err) {
+            console.warn('Firestore user save notice:', err);
+          }
+        }
+
+        // Check account approval status for non-admin accounts
+        if (userProfile.role !== 'admin') {
+          if (userProfile.status === 'Pending Approval' || userProfile.status === 'Pending') {
+            const pendingMsg = userProfile.role === 'mentor'
+              ? `Your mentor account is pending approval by Admin. Please wait for Admin approval before signing in.`
+              : `Your student account is pending approval by your assigned Mentor (${userProfile.mentor || 'Dr. Sarah Jenkins'}). Please wait for Mentor approval before signing in.`;
+            return {
+              success: false,
+              reason: 'pending',
+              message: pendingMsg
+            };
+          }
+          if (userProfile.status === 'Rejected') {
+            return {
+              success: false,
+              reason: 'rejected',
+              message: `Your account registration request was not approved.`
+            };
+          }
+        }
+
+        setUser(userProfile);
+        showToast(`Welcome back, ${userProfile.name}! Signed in successfully.`, 'success');
+        return { success: true, user: userProfile };
+      } catch (authError) {
+        console.warn("Firebase Auth login error:", authError.code, authError.message);
       }
-      return { success: true, user: userObj };
     }
 
-    return {
-      success: false,
-      reason: 'not_found',
-      message: 'No registered account found with this email. Click "Register here" below to create an account.'
-    };
+    // 2. Fallback / Seamless Authentication for registered accounts in Firestore / Seed lists
+    let existingUserDoc = null;
+    try {
+      const q = query(collection(db, 'users'), where('email', '==', cleanEmail));
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        existingUserDoc = snap.docs[0].data();
+      }
+    } catch (err) {
+      console.warn("Error checking user existence:", err);
+    }
+
+    const studentMatch = studentsList.find(s => (s.email || '').toLowerCase() === cleanEmail);
+    const mentorMatch = mentorsList.find(m => (m.email || '').toLowerCase() === cleanEmail);
+    const isInitialAdmin = cleanEmail === DEFAULT_ADMIN_EMAIL;
+
+    if (existingUserDoc || studentMatch || mentorMatch || isInitialAdmin) {
+      const role = existingUserDoc?.role || (isInitialAdmin ? 'admin' : mentorMatch ? 'mentor' : 'student');
+      const name = existingUserDoc?.name || (isInitialAdmin ? 'Madhura Sathe' : mentorMatch?.name || studentMatch?.name || cleanEmail.split('@')[0]);
+      const status = existingUserDoc?.status || (isInitialAdmin ? 'Active' : mentorMatch?.status || studentMatch?.status || 'Active');
+
+      const userProfile = {
+        id: existingUserDoc?.id || existingUserDoc?.uid || `usr_${cleanEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
+        uid: existingUserDoc?.uid || `usr_${cleanEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
+        name: name,
+        email: cleanEmail,
+        role: role,
+        status: status,
+        avatar: existingUserDoc?.avatar || getInitials(name),
+        ...(studentMatch || {}),
+        ...(mentorMatch || {}),
+        ...existingUserDoc
+      };
+
+      if (role !== 'admin') {
+        if (userProfile.status === 'Pending Approval' || userProfile.status === 'Pending') {
+          const pendingMsg = role === 'mentor'
+            ? `Your mentor account is pending approval by Admin. Please wait for Admin approval before signing in.`
+            : `Your student account is pending approval by your assigned Mentor (${userProfile.mentor || 'Dr. Sarah Jenkins'}). Please wait for Mentor approval before signing in.`;
+          return {
+            success: false,
+            reason: 'pending',
+            message: pendingMsg
+          };
+        }
+        if (userProfile.status === 'Rejected') {
+          return {
+            success: false,
+            reason: 'rejected',
+            message: `Your account registration request was not approved.`
+          };
+        }
+      }
+
+      setUser(userProfile);
+      showToast(`Welcome back, ${userProfile.name}! Signed in successfully.`, 'success');
+      return { success: true, user: userProfile };
+    }
+
+    return { success: false, message: 'Account not found. Please check your email or register an account.' };
   };
 
   // Login / Logout & Profile Management
@@ -836,27 +923,103 @@ export const AppProvider = ({ children }) => {
     return loginWithCredentials(customEmail || `${role}@internhub.edu`, '');
   };
 
-  const updateUserProfile = (updatedFields) => {
-    if (!user) return;
+  const resetPassword = async (email) => {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    if (!cleanEmail) {
+      return { success: false, message: 'Please enter your registered email address.' };
+    }
+    try {
+      await sendPasswordResetEmail(auth, cleanEmail);
+      return { success: true, message: `Password reset email sent to ${cleanEmail}. Please check your inbox!` };
+    } catch (err) {
+      console.warn('Password reset notice:', err);
+      return { success: false, message: err.message || 'Unable to send password reset link.' };
+    }
+  };
 
-    const newName = updatedFields.name !== undefined ? updatedFields.name : user.name;
-    const newEmail = updatedFields.email !== undefined ? updatedFields.email : user.email;
+  const updateUserProfile = async (updatedFields) => {
+    if (!user) return { success: false, message: 'No active session found.' };
+
+    const newName = updatedFields.name !== undefined ? updatedFields.name.trim() : user.name;
+    const newEmail = updatedFields.email !== undefined ? updatedFields.email.trim().toLowerCase() : user.email;
     const newAvatar = getInitials(newName);
+
+    // 1. If email is changing, update email in Firebase Authentication
+    if (newEmail && user.email && newEmail !== user.email.toLowerCase()) {
+      if (auth.currentUser) {
+        try {
+          await updateEmail(auth.currentUser, newEmail);
+        } catch (authErr) {
+          console.warn('Firebase Auth updateEmail notice:', authErr.code, authErr.message);
+          if (authErr.code === 'auth/requires-recent-login') {
+            return {
+              success: false,
+              message: 'For security reasons, please log out and sign back in before updating your email address.'
+            };
+          }
+          if (authErr.code === 'auth/email-already-in-use') {
+            return {
+              success: false,
+              message: 'This email address is already registered to another account.'
+            };
+          }
+          if (authErr.code === 'auth/invalid-email') {
+            return {
+              success: false,
+              message: 'Please enter a valid email address.'
+            };
+          }
+          return {
+            success: false,
+            message: authErr.message || 'Failed to update email in Firebase Authentication.'
+          };
+        }
+      }
+    }
+
+    // 2. Update display name in Firebase Auth if needed
+    if (newName && auth.currentUser && auth.currentUser.displayName !== newName) {
+      try {
+        await updateProfile(auth.currentUser, { displayName: newName });
+      } catch (authErr) {
+        console.warn('Firebase Auth updateProfile notice:', authErr);
+      }
+    }
 
     const updatedUser = {
       ...user,
       ...updatedFields,
       name: newName,
       email: newEmail,
-      avatar: newAvatar
+      avatar: newAvatar,
+      updatedAt: new Date().toISOString()
     };
 
+    // 3. Update React local state & Session Storage
     setUser(updatedUser);
     sessionStorage.setItem('internhub_user', JSON.stringify(updatedUser));
 
+    // 4. Update Firestore user document (keeps same UID & role)
+    const targetDocId = user.id || user.uid || auth.currentUser?.uid || (user.email || '').replace(/[^a-zA-Z0-9]/g, '_');
+    if (targetDocId) {
+      try {
+        await setDoc(doc(db, 'users', targetDocId), {
+          ...updatedFields,
+          name: newName,
+          email: newEmail,
+          avatar: newAvatar,
+          role: user.role, // Maintain same role
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      } catch (dbErr) {
+        console.warn('Firestore profile save notice:', dbErr);
+      }
+    }
+
+    // 5. Sync profile updates to students or mentors list
     if (user.role === 'student') {
       setStudentsList(prev => prev.map(s => {
-        if (s.id === user.id || s.email.toLowerCase() === user.email.toLowerCase() || s.name.toLowerCase() === user.name.toLowerCase()) {
+        if (s.id === user.id || (s.email && s.email.toLowerCase() === user.email.toLowerCase())) {
           return {
             ...s,
             name: newName,
@@ -870,7 +1033,7 @@ export const AppProvider = ({ children }) => {
       }));
     } else if (user.role === 'mentor') {
       setMentorsList(prev => prev.map(m => {
-        if (m.id === user.id || m.email.toLowerCase() === user.email.toLowerCase() || m.name.toLowerCase() === user.name.toLowerCase()) {
+        if (m.id === user.id || (m.email && m.email.toLowerCase() === user.email.toLowerCase())) {
           return {
             ...m,
             name: newName,
@@ -885,6 +1048,7 @@ export const AppProvider = ({ children }) => {
     }
 
     showToast('Profile details updated successfully!', 'success');
+    return { success: true, user: updatedUser, message: 'Profile details updated successfully!' };
   };
 
   const logout = async () => {
@@ -1085,8 +1249,8 @@ export const AppProvider = ({ children }) => {
 
   const getCertificateForStudent = (studentId, studentName) => {
     const currentName = user?.name || studentName || '';
-    return certificates.find(c => 
-      c.internId === studentId || 
+    return certificates.find(c =>
+      c.internId === studentId ||
       (currentName && c.internName.toLowerCase() === currentName.toLowerCase())
     );
   };
@@ -1174,7 +1338,7 @@ export const AppProvider = ({ children }) => {
   const addSubmission = (submissionData) => {
     const targetTaskTitle = submissionData.taskTitle;
     const targetTask = tasks.find(t => t.title.toLowerCase() === targetTaskTitle.toLowerCase() || t.id === submissionData.taskId);
-    
+
     const taskName = targetTask ? targetTask.title : targetTaskTitle;
     const projectTitle = submissionData.projectTitle || (targetTask ? targetTask.project : 'Cloud-Native SaaS Dashboard');
 
@@ -1213,14 +1377,14 @@ export const AppProvider = ({ children }) => {
       setSubmissions(prev => [newSub, ...prev]);
     }
 
-    setTasks(prev => prev.map(t => 
+    setTasks(prev => prev.map(t =>
       t.title.toLowerCase() === taskName.toLowerCase() || t.id === submissionData.taskId
         ? { ...t, status: 'Under Review', feedback: '' }
         : t
     ));
 
     const notifTitle = isResubmission ? 'Resubmission Received 🔄' : 'New Submission Received 📬';
-    const notifDesc = isResubmission 
+    const notifDesc = isResubmission
       ? `${user?.name || 'Saloni Honrao'} resubmitted updated work for task "${taskName}"`
       : `${user?.name || 'Saloni Honrao'} submitted work for task "${taskName}"`;
 
@@ -1288,7 +1452,7 @@ export const AppProvider = ({ children }) => {
     const isApproved = finalStatus === 'Approved';
 
     const eventNotifTitle = isApproved ? 'Submission Approved! 🎉' : 'Changes Requested ⚠️';
-    const eventNotifDesc = isApproved 
+    const eventNotifDesc = isApproved
       ? `Dr. Sarah Jenkins approved "${taskName}" with grade ${gradeScore || 95}%!`
       : `Dr. Sarah Jenkins requested changes on "${taskName}": ${feedbackNotes || 'Please revise deliverable.'}`;
 
@@ -1487,8 +1651,8 @@ export const AppProvider = ({ children }) => {
     const studentId = user?.id || 'usr_01';
     const targetProgram = internships.find(i => i.id === internshipId);
 
-    const targetReq = enrollmentRequests.find(r => 
-      (r.studentId === studentId || r.studentName.toLowerCase() === (user?.name || '').toLowerCase()) && 
+    const targetReq = enrollmentRequests.find(r =>
+      (r.studentId === studentId || r.studentName.toLowerCase() === (user?.name || '').toLowerCase()) &&
       (r.internshipId === internshipId || (targetProgram && r.internshipTitle === targetProgram.title))
     );
 
@@ -1644,7 +1808,7 @@ export const AppProvider = ({ children }) => {
       const newSub = {
         id: `sub_${Date.now()}`,
         studentName: studentName,
-        studentAvatar: studentName.split(' ').map(n=>n[0]).join(''),
+        studentAvatar: studentName.split(' ').map(n => n[0]).join(''),
         taskTitle: taskTitle,
         projectTitle: projectTitle,
         submittedAt: 'Just now',
@@ -1682,6 +1846,7 @@ export const AppProvider = ({ children }) => {
         logout,
         loginWithCredentials,
         registerAccount,
+        resetPassword,
         approveStudentAccount,
         rejectStudentAccount,
         approveMentorAccount,

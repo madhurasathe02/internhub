@@ -14,24 +14,30 @@ import {
   Clock,
   ShieldCheck,
   GraduationCap,
-  UserCheck
+  UserCheck,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export default function AuthPage({ initialMode = 'login' }) {
-  const { user, loginWithCredentials, registerAccount } = useApp();
+  const { user, loginWithCredentials, registerAccount, resetPassword } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [pendingNotice, setPendingNotice] = useState('');
 
   // Form Fields
-  const [email, setEmail] = useState('saloni.honrao@university.edu');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [registerRole, setRegisterRole] = useState('student'); // 'student' | 'mentor' (Admin prohibited)
 
@@ -52,15 +58,15 @@ export default function AuthPage({ initialMode = 'login' }) {
     }
   }, [user, navigate]);
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
     setPendingNotice('');
     setLoading(true);
 
-    setTimeout(() => {
-      const result = loginWithCredentials(email, password);
+    try {
+      const result = await loginWithCredentials(email, password);
       setLoading(false);
 
       if (result.success) {
@@ -78,7 +84,10 @@ export default function AuthPage({ initialMode = 'login' }) {
           setErrorMsg(result.message || 'Invalid email or password.');
         }
       }
-    }, 400);
+    } catch (err) {
+      setLoading(false);
+      setErrorMsg(err.message || 'Authentication failed.');
+    }
   };
 
   const handleRegisterSubmit = async (e) => {
@@ -86,6 +95,12 @@ export default function AuthPage({ initialMode = 'login' }) {
     setErrorMsg('');
     setSuccessMsg('');
     setPendingNotice('');
+
+    if (password !== confirmPassword) {
+      setErrorMsg('Passwords do not match. Please re-enter matching passwords.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -98,9 +113,21 @@ export default function AuthPage({ initialMode = 'login' }) {
       setLoading(false);
 
       if (res.success) {
-        setSuccessMsg(res.message);
-        setIsLogin(true); // Switch to sign in mode so user can see their status
-        setEmail(email);
+        if (res.pending) {
+          setPendingNotice(res.message);
+          setIsLogin(true);
+          setPassword('');
+          setConfirmPassword('');
+        } else {
+          const targetRole = res.user?.role || registerRole;
+          if (targetRole === 'admin') {
+            navigate('/admin/dashboard', { replace: true });
+          } else if (targetRole === 'mentor') {
+            navigate('/mentor/dashboard', { replace: true });
+          } else {
+            navigate('/intern/dashboard', { replace: true });
+          }
+        }
       } else {
         setErrorMsg(res.message);
       }
@@ -110,30 +137,22 @@ export default function AuthPage({ initialMode = 'login' }) {
     }
   };
 
-  // Quick Demo Account Selectors for convenient test driving
-  const handleQuickDemo = (demoEmail) => {
-    setEmail(demoEmail);
-    setPassword('password123');
+  const handleResetPassword = async () => {
+    if (!email) {
+      setErrorMsg('Please enter your email address in the field above first.');
+      return;
+    }
     setErrorMsg('');
-    setPendingNotice('');
     setSuccessMsg('');
-    setIsLogin(true);
+    setResetLoading(true);
 
-    const result = loginWithCredentials(demoEmail, 'password123');
-    if (result.success) {
-      if (result.user.role === 'admin') {
-        navigate('/admin/dashboard', { replace: true });
-      } else if (result.user.role === 'mentor') {
-        navigate('/mentor/dashboard', { replace: true });
-      } else {
-        navigate('/intern/dashboard', { replace: true });
-      }
+    const res = await resetPassword(email);
+    setResetLoading(false);
+
+    if (res.success) {
+      setSuccessMsg(res.message);
     } else {
-      if (result.reason === 'pending') {
-        setPendingNotice(result.message);
-      } else {
-        setErrorMsg(result.message);
-      }
+      setErrorMsg(res.message);
     }
   };
 
@@ -246,12 +265,34 @@ export default function AuthPage({ initialMode = 'login' }) {
             fontSize: '0.8125rem',
             marginBottom: '18px',
             display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
+            flexDirection: 'column',
+            gap: '6px',
             fontWeight: 600
           }}>
-            <AlertCircle size={18} style={{ flexShrink: 0 }} />
-            <span>{errorMsg}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertCircle size={18} style={{ flexShrink: 0 }} />
+              <span>{errorMsg}</span>
+            </div>
+            {isLogin && errorMsg.includes('Incorrect password') && (
+              <button
+                type="button"
+                onClick={handleResetPassword}
+                disabled={resetLoading}
+                style={{
+                  alignSelf: 'flex-start',
+                  background: 'none',
+                  border: 'none',
+                  color: '#DC2626',
+                  textDecoration: 'underline',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  padding: 0
+                }}
+              >
+                {resetLoading ? 'Sending reset link...' : 'Forgot your password? Send reset link'}
+              </button>
+            )}
           </div>
         )}
 
@@ -274,19 +315,48 @@ export default function AuthPage({ initialMode = 'login' }) {
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Password</label>
+            <div className="form-group" style={{ marginBottom: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label className="form-label">Password</label>
+                <button
+                  type="button"
+                  onClick={handleResetPassword}
+                  disabled={resetLoading}
+                  style={{ background: 'none', border: 'none', fontSize: '0.75rem', color: '#8B7CF6', fontWeight: 600, cursor: 'pointer' }}
+                >
+                  {resetLoading ? 'Sending link...' : 'Forgot password?'}
+                </button>
+              </div>
               <div style={{ position: 'relative' }}>
                 <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#77758A' }} />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   className="form-input"
                   placeholder="••••••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  style={{ paddingLeft: '36px' }}
+                  style={{ paddingLeft: '36px', paddingRight: '38px' }}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#77758A',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                  title={showPassword ? 'Hide Password' : 'Show Password'}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
 
@@ -336,19 +406,89 @@ export default function AuthPage({ initialMode = 'login' }) {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Password</label>
+              <label className="form-label">Password (Min. 6 characters)</label>
               <div style={{ position: 'relative' }}>
                 <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#77758A' }} />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   className="form-input"
                   placeholder="Create password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  style={{ paddingLeft: '36px' }}
+                  style={{ paddingLeft: '36px', paddingRight: '38px' }}
+                  minLength={6}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#77758A',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                  title={showPassword ? 'Hide Password' : 'Show Password'}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Confirm Password (Re-enter Password)</label>
+              <div style={{ position: 'relative' }}>
+                <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#77758A' }} />
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  className="form-input"
+                  placeholder="Re-enter password to confirm"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  style={{
+                    paddingLeft: '36px',
+                    paddingRight: '38px',
+                    borderColor: confirmPassword && password ? (password === confirmPassword ? '#22C55E' : '#EF4444') : undefined
+                  }}
+                  minLength={6}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#77758A',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                  title={showConfirmPassword ? 'Hide Password' : 'Show Password'}
+                >
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              {confirmPassword && password && password !== confirmPassword && (
+                <div style={{ fontSize: '0.75rem', color: '#EF4444', marginTop: '4px', fontWeight: 600 }}>
+                  ⚠️ Passwords do not match
+                </div>
+              )}
+              {confirmPassword && password && password === confirmPassword && (
+                <div style={{ fontSize: '0.75rem', color: '#16A34A', marginTop: '4px', fontWeight: 600 }}>
+                  ✓ Passwords match!
+                </div>
+              )}
             </div>
 
             <div className="form-group">
@@ -359,12 +499,9 @@ export default function AuthPage({ initialMode = 'login' }) {
                 onChange={(e) => setRegisterRole(e.target.value)}
                 style={{ borderRadius: '10px', height: '42px', fontWeight: 600, color: '#29283A' }}
               >
-                <option value="student">🎓 Student / Intern (Requires Mentor Approval)</option>
-                <option value="mentor">👨‍🏫 Faculty / Industry Mentor (Requires Admin Approval)</option>
+                <option value="student">🎓 Student / Intern</option>
+                <option value="mentor">👨‍🏫 Faculty / Industry Mentor</option>
               </select>
-              <div style={{ fontSize: '0.75rem', color: '#77758A', marginTop: '6px' }}>
-                * Note: Admin account is restricted to institutional leadership (Madhura Sathe).
-              </div>
             </div>
 
             <button
@@ -379,57 +516,8 @@ export default function AuthPage({ initialMode = 'login' }) {
           </form>
         )}
 
-        {/* QUICK DEMO LOGIN BUTTONS */}
-        <div style={{ marginTop: '24px', paddingTop: '18px', borderTop: '1px solid #E5E2F0' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#77758A', textTransform: 'uppercase', marginBottom: '10px', textAlign: 'center' }}>
-            Quick Demo Shortcuts (Click to prefill)
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px' }}>
-            <button
-              type="button"
-              className="btn btn-outline btn-sm"
-              onClick={() => handleQuickDemo('saloni.honrao@university.edu')}
-              style={{ fontSize: '0.76rem', justifyContent: 'flex-start', padding: '6px 8px' }}
-            >
-              <GraduationCap size={14} style={{ color: '#8B7CF6' }} />
-              <span>Student (Saloni)</span>
-            </button>
-
-            <button
-              type="button"
-              className="btn btn-outline btn-sm"
-              onClick={() => handleQuickDemo('sarah.jenkins@internhub.edu')}
-              style={{ fontSize: '0.76rem', justifyContent: 'flex-start', padding: '6px 8px' }}
-            >
-              <UserCheck size={14} style={{ color: '#6D61D9' }} />
-              <span>Mentor (Dr. Sarah)</span>
-            </button>
-
-            <button
-              type="button"
-              className="btn btn-outline btn-sm"
-              onClick={() => handleQuickDemo('madhu2@gmail.com')}
-              style={{ fontSize: '0.76rem', justifyContent: 'flex-start', padding: '6px 8px' }}
-            >
-              <ShieldCheck size={14} style={{ color: '#2563EB' }} />
-              <span>Admin (Madhura Sathe)</span>
-            </button>
-
-            <button
-              type="button"
-              className="btn btn-outline btn-sm"
-              onClick={() => handleQuickDemo('rohan.sharma@univ.edu')}
-              style={{ fontSize: '0.76rem', justifyContent: 'flex-start', padding: '6px 8px', borderColor: '#FCD34D', color: '#B45309', backgroundColor: '#FFFBEB' }}
-            >
-              <Clock size={14} />
-              <span>Pending Student</span>
-            </button>
-          </div>
-        </div>
-
         {/* TOGGLE LOGIN / REGISTER */}
-        <div style={{ textAlign: 'center', marginTop: '18px' }}>
+        <div style={{ textAlign: 'center', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #E5E2F0' }}>
           <button
             type="button"
             onClick={() => {
