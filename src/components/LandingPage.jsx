@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import LandingNavbar from './LandingNavbar';
 import SplashScreen from './SplashScreen';
+import ModalPortal from './ModalPortal';
 import '../styles/LandingPage.css';
 
 const navLinkStyle = {
@@ -399,158 +400,160 @@ export default function LandingPage({ onLogin, onRegister }) {
 
       {/* FEATURE DETAIL INTERACTIVE MODAL */}
       {selectedFeature && (
-        <div 
-          className="feature-modal-overlay"
-          onClick={() => setActiveFeatureIndex(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="feature-modal-title"
-        >
+        <ModalPortal>
           <div 
-            className="feature-modal-card"
-            onClick={(e) => e.stopPropagation()}
+            className="feature-modal-overlay"
+            onClick={() => setActiveFeatureIndex(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="feature-modal-title"
           >
-            <div className="feature-modal-header">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div className="feature-modal-icon-badge-row">
-                  <div className="feature-modal-icon-box">
-                    {React.createElement(selectedFeature.icon, { size: 28 })}
-                  </div>
-                  <div>
-                    <span className="section-badge" style={{ marginBottom: '4px', fontSize: '0.75rem' }}>
-                      {selectedFeature.badge}
-                    </span>
-                    <h2 id="feature-modal-title" className="feature-modal-title">
-                      {selectedFeature.title}
-                    </h2>
+            <div 
+              className="feature-modal-card"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="feature-modal-header">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div className="feature-modal-icon-badge-row">
+                    <div className="feature-modal-icon-box">
+                      {React.createElement(selectedFeature.icon, { size: 28 })}
+                    </div>
+                    <div>
+                      <span className="section-badge" style={{ marginBottom: '4px', fontSize: '0.75rem' }}>
+                        {selectedFeature.badge}
+                      </span>
+                      <h2 id="feature-modal-title" className="feature-modal-title">
+                        {selectedFeature.title}
+                      </h2>
+                    </div>
                   </div>
                 </div>
+
+                <button 
+                  className="feature-modal-close-btn"
+                  onClick={() => setActiveFeatureIndex(null)}
+                  aria-label="Close modal"
+                >
+                  <X size={18} />
+                </button>
               </div>
 
-              <button 
-                className="feature-modal-close-btn"
-                onClick={() => setActiveFeatureIndex(null)}
-                aria-label="Close modal"
-              >
-                <X size={18} />
-              </button>
-            </div>
+              {/* Modal Sub-Header Tabs */}
+              <div className="feature-modal-tab-row">
+                <button 
+                  className={`feature-modal-tab ${modalTab === 'data' ? 'active' : ''}`}
+                  onClick={() => setModalTab('data')}
+                >
+                  <span>Live Tasks & Data ({selectedFeature.sampleData ? selectedFeature.sampleData.length : 0})</span>
+                </button>
+                <button 
+                  className={`feature-modal-tab ${modalTab === 'overview' ? 'active' : ''}`}
+                  onClick={() => setModalTab('overview')}
+                >
+                  <span>Overview & Capabilities</span>
+                </button>
+              </div>
 
-            {/* Modal Sub-Header Tabs */}
-            <div className="feature-modal-tab-row">
-              <button 
-                className={`feature-modal-tab ${modalTab === 'data' ? 'active' : ''}`}
-                onClick={() => setModalTab('data')}
-              >
-                <span>Live Tasks & Data ({selectedFeature.sampleData ? selectedFeature.sampleData.length : 0})</span>
-              </button>
-              <button 
-                className={`feature-modal-tab ${modalTab === 'overview' ? 'active' : ''}`}
-                onClick={() => setModalTab('overview')}
-              >
-                <span>Overview & Capabilities</span>
-              </button>
-            </div>
+              {/* TAB 1: LIVE TASKS / DATA PREVIEW */}
+              {modalTab === 'data' && (
+                <div className="feature-modal-tab-content animate-fade-in">
+                  <div className="feature-modal-section-title">
+                    {selectedFeature.sampleDataType || 'Specific Module Items'}
+                  </div>
 
-            {/* TAB 1: LIVE TASKS / DATA PREVIEW */}
-            {modalTab === 'data' && (
-              <div className="feature-modal-tab-content animate-fade-in">
-                <div className="feature-modal-section-title">
-                  {selectedFeature.sampleDataType || 'Specific Module Items'}
-                </div>
-
-                <div className="feature-sample-items-list">
-                  {selectedFeature.sampleData && selectedFeature.sampleData.map((item) => (
-                    <div key={item.id} className="feature-sample-item-card">
-                      <div className="feature-sample-item-top">
-                        <h4 className="feature-sample-item-title">{item.title}</h4>
-                        <span 
-                          className="feature-sample-item-badge" 
-                          style={{ 
-                            backgroundColor: item.tagColor ? `${item.tagColor}18` : '#E6E3FA', 
-                            color: item.tagColor || 'var(--primary)',
-                            border: `1px solid ${item.tagColor ? `${item.tagColor}40` : 'var(--border-secondary)'}`
-                          }}
-                        >
-                          {item.badge}
-                        </span>
+                  <div className="feature-sample-items-list">
+                    {selectedFeature.sampleData && selectedFeature.sampleData.map((item) => (
+                      <div key={item.id} className="feature-sample-item-card">
+                        <div className="feature-sample-item-top">
+                          <h4 className="feature-sample-item-title">{item.title}</h4>
+                          <span 
+                            className="feature-sample-item-badge" 
+                            style={{ 
+                              backgroundColor: item.tagColor ? `${item.tagColor}18` : '#E6E3FA', 
+                              color: item.tagColor || 'var(--primary)',
+                              border: `1px solid ${item.tagColor ? `${item.tagColor}40` : 'var(--border-secondary)'}`
+                            }}
+                          >
+                            {item.badge}
+                          </span>
+                        </div>
+                        <div className="feature-sample-item-subtitle">{item.subtitle}</div>
+                        <div className="feature-sample-item-detail">{item.detail}</div>
                       </div>
-                      <div className="feature-sample-item-subtitle">{item.subtitle}</div>
-                      <div className="feature-sample-item-detail">{item.detail}</div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* TAB 2: OVERVIEW & CAPABILITIES */}
-            {modalTab === 'overview' && (
-              <div className="feature-modal-tab-content animate-fade-in">
-                <p className="feature-modal-desc">
-                  {selectedFeature.fullDesc}
-                </p>
+              {/* TAB 2: OVERVIEW & CAPABILITIES */}
+              {modalTab === 'overview' && (
+                <div className="feature-modal-tab-content animate-fade-in">
+                  <p className="feature-modal-desc">
+                    {selectedFeature.fullDesc}
+                  </p>
 
-                <div className="feature-modal-section-title">Key Capabilities</div>
-                <div className="feature-modal-capabilities-list">
-                  {selectedFeature.keyCapabilities.map((cap, i) => (
-                    <div key={i} className="feature-modal-capability-item">
-                      <Check size={16} className="feature-modal-capability-icon" />
-                      <span>{cap}</span>
-                    </div>
-                  ))}
+                  <div className="feature-modal-section-title">Key Capabilities</div>
+                  <div className="feature-modal-capabilities-list">
+                    {selectedFeature.keyCapabilities.map((cap, i) => (
+                      <div key={i} className="feature-modal-capability-item">
+                        <Check size={16} className="feature-modal-capability-icon" />
+                        <span>{cap}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="feature-modal-section-title">Supported Roles</div>
+                  <div className="feature-modal-roles-row">
+                    {selectedFeature.roles.map((role, i) => (
+                      <span key={i} className="feature-role-tag">
+                        <CheckCircle2 size={13} style={{ color: 'var(--primary)' }} />
+                        <span>{role}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="feature-modal-footer">
+                <div className="feature-modal-nav-btns">
+                  <button 
+                    className="btn btn-secondary btn-sm"
+                    disabled={activeFeatureIndex === 0}
+                    onClick={() => handleOpenFeatureModal(Math.max(0, activeFeatureIndex - 1))}
+                    style={{ opacity: activeFeatureIndex === 0 ? 0.5 : 1 }}
+                  >
+                    <ChevronLeft size={16} />
+                    <span>Prev</span>
+                  </button>
+                  <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: 600, padding: '0 4px' }}>
+                    {activeFeatureIndex + 1} / {FEATURES_DATA.length}
+                  </span>
+                  <button 
+                    className="btn btn-secondary btn-sm"
+                    disabled={activeFeatureIndex === FEATURES_DATA.length - 1}
+                    onClick={() => handleOpenFeatureModal(Math.min(FEATURES_DATA.length - 1, activeFeatureIndex + 1))}
+                    style={{ opacity: activeFeatureIndex === FEATURES_DATA.length - 1 ? 0.5 : 1 }}
+                  >
+                    <span>Next</span>
+                    <ChevronRight size={16} />
+                  </button>
                 </div>
 
-                <div className="feature-modal-section-title">Supported Roles</div>
-                <div className="feature-modal-roles-row">
-                  {selectedFeature.roles.map((role, i) => (
-                    <span key={i} className="feature-role-tag">
-                      <CheckCircle2 size={13} style={{ color: 'var(--primary)' }} />
-                      <span>{role}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="feature-modal-footer">
-              <div className="feature-modal-nav-btns">
                 <button 
-                  className="btn btn-secondary btn-sm"
-                  disabled={activeFeatureIndex === 0}
-                  onClick={() => handleOpenFeatureModal(Math.max(0, activeFeatureIndex - 1))}
-                  style={{ opacity: activeFeatureIndex === 0 ? 0.5 : 1 }}
+                  className="btn btn-primary"
+                  onClick={() => {
+                    const roleToUse = selectedFeature.recommendedRole;
+                    setActiveFeatureIndex(null);
+                    handleLoginClick(roleToUse);
+                  }}
                 >
-                  <ChevronLeft size={16} />
-                  <span>Prev</span>
-                </button>
-                <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: 600, padding: '0 4px' }}>
-                  {activeFeatureIndex + 1} / {FEATURES_DATA.length}
-                </span>
-                <button 
-                  className="btn btn-secondary btn-sm"
-                  disabled={activeFeatureIndex === FEATURES_DATA.length - 1}
-                  onClick={() => handleOpenFeatureModal(Math.min(FEATURES_DATA.length - 1, activeFeatureIndex + 1))}
-                  style={{ opacity: activeFeatureIndex === FEATURES_DATA.length - 1 ? 0.5 : 1 }}
-                >
-                  <span>Next</span>
-                  <ChevronRight size={16} />
+                  <span>Log In to Manage</span>
+                  <ArrowRight size={16} />
                 </button>
               </div>
-
-              <button 
-                className="btn btn-primary"
-                onClick={() => {
-                  const roleToUse = selectedFeature.recommendedRole;
-                  setActiveFeatureIndex(null);
-                  handleLoginClick(roleToUse);
-                }}
-              >
-                <span>Log In to Manage</span>
-                <ArrowRight size={16} />
-              </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* 5. HOW IT WORKS */}
