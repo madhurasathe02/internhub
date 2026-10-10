@@ -1,19 +1,30 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, ArrowRight, Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import '../styles/SplashScreen.css';
 
-export default function SplashScreen({ onComplete }) {
+export default function SplashScreen({ onComplete, autoDismiss = true, duration = 2500 }) {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef(null);
+  const dismissedRef = useRef(false);
 
   const handleDismiss = () => {
+    if (dismissedRef.current) return;
+    dismissedRef.current = true;
     setIsFadingOut(true);
     setTimeout(() => {
       if (onComplete) onComplete();
     }, 500); // match fade out transition duration
   };
+
+  useEffect(() => {
+    if (!autoDismiss) return;
+    const timer = setTimeout(() => {
+      handleDismiss();
+    }, duration);
+    return () => clearTimeout(timer);
+  }, [autoDismiss, duration]);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -44,6 +55,7 @@ export default function SplashScreen({ onComplete }) {
         muted={isMuted}
         playsInline
         onEnded={handleDismiss}
+        onError={handleDismiss}
       />
 
       {/* 2. Soft Glassmorphic Video Overlay Mask */}

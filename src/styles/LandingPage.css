@@ -1308,9 +1308,11 @@
   position: relative;
   width: 100%;
   max-width: 100vw;
-  min-height: 480px;
-  height: 65vh;
-  max-height: 680px;
+  min-height: 380px;
+  height: 55vh;
+  height: 55svh;
+  height: 55dvh;
+  max-height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1525,10 +1527,11 @@
   .video-hero-wrapper {
     width: 100%;
     max-width: 100vw;
-    min-height: unset;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    max-height: 55vh;
+    min-height: 220px;
+    height: 40vh;
+    height: 40svh;
+    height: 40dvh;
+    max-height: 320px;
     margin-bottom: 16px;
   }
 
@@ -1553,10 +1556,13 @@
 
 @media (max-width: 480px) {
   .video-hero-wrapper {
-    min-height: unset;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    max-height: 50vh;
+    width: 100%;
+    max-width: 100vw;
+    min-height: 180px;
+    height: 34vh;
+    height: 34svh;
+    height: 34dvh;
+    max-height: 250px;
     margin-bottom: 12px;
   }
 

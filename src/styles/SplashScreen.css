@@ -2,12 +2,17 @@
 
 .splash-screen-overlay {
   position: fixed;
+  inset: 0;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100%;
   width: 100vw;
+  height: 100%;
   height: 100vh;
+  height: 100svh;
+  height: 100dvh;
   background-color: #0F0D1A;
   z-index: 99999;
   display: flex;
@@ -28,14 +33,12 @@
 /* Background Video Player Element */
 .splash-video-element {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
   z-index: 1;
 }
 
