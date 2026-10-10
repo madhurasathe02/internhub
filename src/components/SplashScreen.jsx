@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Sparkles, ArrowRight, Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import '../styles/SplashScreen.css';
 
@@ -8,6 +9,15 @@ export default function SplashScreen({ onComplete, autoDismiss = true, duration 
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef(null);
   const dismissedRef = useRef(false);
+
+  // Lock body scroll while splash screen is active
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
 
   const handleDismiss = () => {
     if (dismissedRef.current) return;
@@ -44,7 +54,7 @@ export default function SplashScreen({ onComplete, autoDismiss = true, duration 
     }
   };
 
-  return (
+  const content = (
     <div className={`splash-screen-overlay ${isFadingOut ? 'splash-fade-out' : ''}`}>
       {/* 1. Fullscreen / Card Video Player */}
       <video
@@ -120,4 +130,6 @@ export default function SplashScreen({ onComplete, autoDismiss = true, duration 
       </div>
     </div>
   );
+
+  return createPortal(content, document.body);
 }

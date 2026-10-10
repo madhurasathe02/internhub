@@ -274,7 +274,7 @@ export default function LandingPage({ onLogin, onRegister }) {
   const selectedFeature = activeFeatureIndex !== null ? FEATURES_DATA[activeFeatureIndex] : null;
 
   return (
-    <div className="landing-container animate-fade-in">
+    <>
       {/* 0. INTRO SPLASH SCREEN */}
       {showSplash && (
         <SplashScreen 
@@ -283,6 +283,8 @@ export default function LandingPage({ onLogin, onRegister }) {
           duration={2500} 
         />
       )}
+
+      <div className="landing-container animate-fade-in">
 
       {/* 1. NAVBAR WITH CENTERED LOGO & SPLASH BACKDROP */}
       <LandingNavbar 
@@ -831,5 +833,6 @@ export default function LandingPage({ onLogin, onRegister }) {
         </div>
       </footer>
     </div>
-  );
+  </>
+);
 }
