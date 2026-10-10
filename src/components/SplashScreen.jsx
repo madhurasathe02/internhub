@@ -1,40 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState, useRef } from 'react';
 import { Sparkles, ArrowRight, Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import '../styles/SplashScreen.css';
 
-export default function SplashScreen({ onComplete, autoDismiss = true, duration = 2500 }) {
+export default function SplashScreen({ onComplete }) {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef(null);
-  const dismissedRef = useRef(false);
-
-  // Lock body scroll while splash screen is active
-  useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = originalOverflow;
-    };
-  }, []);
 
   const handleDismiss = () => {
-    if (dismissedRef.current) return;
-    dismissedRef.current = true;
     setIsFadingOut(true);
     setTimeout(() => {
       if (onComplete) onComplete();
     }, 500); // match fade out transition duration
   };
-
-  useEffect(() => {
-    if (!autoDismiss) return;
-    const timer = setTimeout(() => {
-      handleDismiss();
-    }, duration);
-    return () => clearTimeout(timer);
-  }, [autoDismiss, duration]);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -54,7 +33,7 @@ export default function SplashScreen({ onComplete, autoDismiss = true, duration 
     }
   };
 
-  const content = (
+  return (
     <div className={`splash-screen-overlay ${isFadingOut ? 'splash-fade-out' : ''}`}>
       {/* 1. Fullscreen / Card Video Player */}
       <video
@@ -65,7 +44,6 @@ export default function SplashScreen({ onComplete, autoDismiss = true, duration 
         muted={isMuted}
         playsInline
         onEnded={handleDismiss}
-        onError={handleDismiss}
       />
 
       {/* 2. Soft Glassmorphic Video Overlay Mask */}
@@ -130,6 +108,4 @@ export default function SplashScreen({ onComplete, autoDismiss = true, duration 
       </div>
     </div>
   );
-
-  return createPortal(content, document.body);
 }

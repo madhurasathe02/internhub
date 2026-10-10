@@ -2,21 +2,14 @@
 
 .splash-screen-overlay {
   position: fixed;
-  inset: 0;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  width: 100%;
   width: 100vw;
-  height: 100%;
   height: 100vh;
-  height: 100svh;
-  height: 100dvh;
-  min-height: 100%;
-  min-width: 100%;
   background-color: #0F0D1A;
-  z-index: 999999;
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,12 +28,14 @@
 /* Background Video Player Element */
 .splash-video-element {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
   object-fit: cover;
-  object-position: center;
   z-index: 1;
 }
 
@@ -52,8 +47,8 @@
 /* Top Right Action Controls Bar */
 .splash-top-controls {
   position: absolute;
-  top: max(20px, env(safe-area-inset-top, 20px));
-  right: max(24px, env(safe-area-inset-right, 24px));
+  top: 24px;
+  right: 28px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -290,27 +285,14 @@
 /* RESPONSIVE MEDIA QUERIES */
 @media (max-width: 640px) {
   .splash-top-controls {
-    top: max(14px, env(safe-area-inset-top, 14px));
-    right: max(14px, env(safe-area-inset-right, 14px));
+    top: 16px;
+    right: 16px;
     gap: 8px;
-    max-width: calc(100vw - 28px);
-  }
-
-  .splash-control-btn {
-    height: 34px;
-    padding: 0 10px;
-    font-size: 0.75rem;
-  }
-
-  .splash-skip-btn {
-    height: 34px;
-    padding: 0 14px;
-    font-size: 0.78rem;
   }
 
   .splash-content-box.video-mode {
-    padding: 16px;
-    max-width: 92vw;
+    padding: 24px 20px;
+    border-radius: 24px;
   }
 
   .splash-brand-icon-wrapper {
@@ -326,43 +308,5 @@
   .splash-tagline {
     font-size: 0.88rem;
     margin-bottom: 18px;
-  }
-}
-
-@media (max-width: 420px) {
-  .splash-top-controls {
-    top: max(10px, env(safe-area-inset-top, 10px));
-    right: max(10px, env(safe-area-inset-right, 10px));
-    gap: 6px;
-  }
-
-  .splash-control-btn {
-    height: 32px;
-    padding: 0 8px;
-  }
-
-  .splash-control-btn span {
-    display: none;
-  }
-
-  .splash-skip-btn {
-    height: 32px;
-    padding: 0 12px;
-    font-size: 0.75rem;
-  }
-
-  .splash-brand-icon-wrapper {
-    width: 58px;
-    height: 58px;
-    border-radius: 16px;
-  }
-
-  .splash-brand-text {
-    font-size: 1.85rem;
-  }
-
-  .splash-tagline {
-    font-size: 0.8rem;
-    max-width: 280px;
   }
 }
