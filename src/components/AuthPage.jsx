@@ -380,7 +380,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="e.g. Saloni Honrao"
+                  placeholder="e.g. John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   style={{ paddingLeft: '36px' }}
@@ -396,7 +396,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                 <input
                   type="email"
                   className="form-input"
-                  placeholder="e.g. saloni.honrao@university.edu"
+                  placeholder="e.g. john.doe@university.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   style={{ paddingLeft: '36px' }}
