@@ -207,7 +207,7 @@ export default function InternOverview() {
       </div>
 
       {/* 2. 5 SUMMARY METRIC CARDS GRID (Exact 5-card row from uploaded photo) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '16px' }}>
+      <div className="stat-cards-grid">
         {/* Card 1: My Projects */}
         <div 
           onClick={() => navigate('/intern/projects')}
@@ -224,7 +224,7 @@ export default function InternOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#E5DCFF', color: '#6C47FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -232,7 +232,7 @@ export default function InternOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{myProjectsCount || 4}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{myProjectsCount || 4}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>My Projects</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Assigned tasks</div>
           </div>
@@ -259,7 +259,7 @@ export default function InternOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFE0EC', color: '#EC4899', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -267,7 +267,7 @@ export default function InternOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingTasksCount || 2}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingTasksCount || 2}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Pending Tasks</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Requires action</div>
           </div>
@@ -294,7 +294,7 @@ export default function InternOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D6F0FF', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -302,7 +302,7 @@ export default function InternOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{submittedTasksCount || 0}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{submittedTasksCount || 0}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Submitted Tasks</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Total submitted</div>
           </div>
@@ -329,7 +329,7 @@ export default function InternOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D1FAE5', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -337,7 +337,7 @@ export default function InternOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{approvedWorkCount || 0}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{approvedWorkCount || 0}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Approved Work</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Passed evaluation</div>
           </div>
@@ -364,7 +364,7 @@ export default function InternOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFEDD5', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -372,7 +372,7 @@ export default function InternOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingReviewsCount || 0}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingReviewsCount || 0}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Pending Reviews</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Under supervisor review</div>
           </div>
@@ -431,7 +431,7 @@ export default function InternOverview() {
       )}
 
       {/* Middle Grid: Upcoming Deadlines & My Recent Activity */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+      <div className="dashboard-grid-2">
         {/* Upcoming Deadlines */}
         <div className="card">
           <div className="card-header">
@@ -518,7 +518,7 @@ export default function InternOverview() {
       </div>
 
       {/* Main Grid: My Projects + Recent Mentor Feedback */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+      <div className="dashboard-grid-2">
         {/* Projects Card */}
         <div className="card">
           <div className="card-header">

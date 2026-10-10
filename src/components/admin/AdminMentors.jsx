@@ -73,31 +73,31 @@ export default function AdminMentors() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {pendingMentors.map(m => (
-              <div key={m.id} style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '14px',
-                padding: '14px 18px',
-                borderRadius: '14px',
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #FDE68A',
-                boxShadow: '0 2px 6px rgba(217, 119, 6, 0.06)'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div className="avatar" style={{ backgroundColor: '#6D61D9', width: '38px', height: '38px', fontWeight: 700 }}>
+              <div 
+                key={m.id} 
+                className="btn-responsive-row"
+                style={{
+                  padding: '14px 16px',
+                  borderRadius: '14px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #FDE68A',
+                  boxShadow: '0 2px 6px rgba(217, 119, 6, 0.06)',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: '1 1 240px' }}>
+                  <div className="avatar" style={{ backgroundColor: '#6D61D9', width: '38px', height: '38px', fontWeight: 700, flexShrink: 0 }}>
                     {m.avatar || m.name.slice(0, 2).toUpperCase()}
                   </div>
-                  <div>
+                  <div style={{ minWidth: 0, overflow: 'hidden' }}>
                     <div style={{ fontWeight: 800, color: '#29283A', fontSize: '0.95rem' }}>{m.name}</div>
-                    <div style={{ fontSize: '0.8125rem', color: '#77758A' }}>
+                    <div style={{ fontSize: '0.8125rem', color: '#77758A', wordBreak: 'break-word' }}>
                       {m.email} • <span style={{ color: '#29283A', fontWeight: 600 }}>{m.department || 'Computer Science'}</span> ({m.title || 'Faculty Supervisor'})
                     </div>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <div className="btn-group-responsive">
                   <button
                     className="btn btn-outline btn-sm"
                     style={{ borderColor: '#FCA5A5', color: '#DC2626' }}
@@ -113,7 +113,7 @@ export default function AdminMentors() {
                     onClick={() => approveMentorAccount(m.id)}
                   >
                     <CheckCircle2 size={14} />
-                    <span>Approve Mentor Account</span>
+                    <span>Approve <span className="hide-mobile">Mentor Account</span></span>
                   </button>
                 </div>
               </div>
@@ -124,24 +124,14 @@ export default function AdminMentors() {
 
       <div className="card">
         {/* Search & Filter Toolbar */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '12px', 
-          flexWrap: 'wrap', 
-          alignItems: 'center', 
-          justify: 'space-between',
-          marginBottom: '20px',
-          paddingBottom: '16px',
-          borderBottom: '1px solid #E5E2F0' 
-        }}>
+        <div className="filter-toolbar">
           <SearchBar 
             value={searchQuery} 
             onChange={setSearchQuery} 
             placeholder="Search by mentor name or email..." 
-            style={{ maxWidth: '340px' }}
           />
 
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div className="filter-controls">
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#77758A', fontSize: '0.84rem', fontWeight: 600 }}>
               <Filter size={14} />
               <span>Department:</span>
@@ -151,7 +141,7 @@ export default function AdminMentors() {
               className="form-input" 
               value={selectedDept}
               onChange={e => setSelectedDept(e.target.value)}
-              style={{ width: 'auto', minWidth: '180px', height: '38px', padding: '0 12px', fontSize: '0.84rem', borderRadius: '10px' }}
+              style={{ width: 'auto', minWidth: '160px', height: '38px', padding: '0 12px', fontSize: '0.84rem', borderRadius: '10px' }}
             >
               <option value="All">All Departments</option>
               <option value="Computer Science">Computer Science & AI</option>

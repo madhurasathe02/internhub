@@ -404,7 +404,7 @@ export default function DeadlineCalendar({ onOpenSubmitModal }) {
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+            <div className="btn-group-responsive" style={{ justifyContent: 'flex-end' }}>
               <button className="btn btn-outline" onClick={() => setSelectedEvent(null)}>Close</button>
               {user?.role === 'student' && selectedEvent.type === 'task' && (
                 <button 

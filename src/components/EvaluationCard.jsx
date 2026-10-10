@@ -73,7 +73,7 @@ export default function EvaluationCard({ evaluation }) {
           SKILL CATEGORIES EVALUATION:
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
           {categories.map(cat => (
             <div key={cat.key} style={{ backgroundColor: '#F7F6FC', padding: '10px 14px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#29283A' }}>

@@ -44,7 +44,7 @@ export default function MentorSubmissions() {
       </div>
 
       {/* Search & Filter Toolbar */}
-      <div className="card" style={{ padding: '16px 20px', display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="card filter-toolbar">
         <SearchBar 
           value={searchQuery} 
           onChange={setSearchQuery} 
@@ -52,7 +52,7 @@ export default function MentorSubmissions() {
           style={{ maxWidth: '340px' }}
         />
 
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="filter-controls">
           <Filter size={16} style={{ color: '#77758A', marginRight: '4px' }} />
           {['All', 'Under Review', 'Approved', 'Changes Requested', 'Pending'].map((st) => (
             <button
@@ -180,7 +180,7 @@ export default function MentorSubmissions() {
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+            <div className="btn-group-responsive" style={{ justifyContent: 'flex-end', marginTop: '20px' }}>
               <button 
                 className="btn btn-danger" 
                 onClick={() => handleAction(selectedSub.id, 'Changes Requested')}

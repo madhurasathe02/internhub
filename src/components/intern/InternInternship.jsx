@@ -38,7 +38,7 @@ export default function InternInternship() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="card" style={{ padding: '16px 20px', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+      <div className="card filter-toolbar">
         <SearchBar 
           value={searchQuery} 
           onChange={setSearchQuery} 
@@ -46,7 +46,7 @@ export default function InternInternship() {
           style={{ maxWidth: '360px' }}
         />
 
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <div className="filter-controls">
           {[
             { id: 'All', label: `All Programs (${internships.length})` },
             { id: 'Available', label: `Available Tracks (${internships.length - enrolledCount})` },

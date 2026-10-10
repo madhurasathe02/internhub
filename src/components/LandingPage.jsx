@@ -613,9 +613,9 @@ export default function LandingPage({ onLogin, onRegister }) {
       <section id="user-roles" className="landing-section">
         <div className="section-header">
           <div className="section-badge">TAILORED WORKSPACES</div>
-          <h2 className="section-title">One Platform. Three Powerful Roles.</h2>
+          <h2 className="section-title">One Platform. Tailored Workspaces.</h2>
           <p className="section-desc">
-            Dedicated features designed specifically for students, academic supervisors, and institutional admins.
+            Dedicated features designed specifically for students and academic supervisors.
           </p>
         </div>
 
@@ -710,53 +710,6 @@ export default function LandingPage({ onLogin, onRegister }) {
 
             <button className="btn btn-secondary" style={{ width: '100%' }} onClick={() => handleLoginClick('mentor')}>
               <span>Login as Mentor</span>
-              <ArrowRight size={14} />
-            </button>
-          </div>
-
-          {/* Admin Role */}
-          <div className="role-card">
-            <div>
-              <div className="role-card-header">
-                <div className="role-icon-box admin">
-                  <Shield size={28} />
-                </div>
-                <div>
-                  <h3 className="role-title">ADMIN</h3>
-                  <span style={{ fontSize: '0.8125rem', color: '#77758A' }}>Institutional Director</span>
-                </div>
-              </div>
-
-              <ul className="role-bullet-list">
-                <li className="role-bullet-item">
-                  <CheckCircle2 size={16} className="role-bullet-icon" style={{ color: '#E9A6C7' }} />
-                  <span>Manage users & roles</span>
-                </li>
-                <li className="role-bullet-item">
-                  <CheckCircle2 size={16} className="role-bullet-icon" style={{ color: '#E9A6C7' }} />
-                  <span>Manage internship batches</span>
-                </li>
-                <li className="role-bullet-item">
-                  <CheckCircle2 size={16} className="role-bullet-icon" style={{ color: '#E9A6C7' }} />
-                  <span>Manage projects & orgs</span>
-                </li>
-                <li className="role-bullet-item">
-                  <CheckCircle2 size={16} className="role-bullet-icon" style={{ color: '#E9A6C7' }} />
-                  <span>Manage tasks</span>
-                </li>
-                <li className="role-bullet-item">
-                  <CheckCircle2 size={16} className="role-bullet-icon" style={{ color: '#E9A6C7' }} />
-                  <span>View completion reports</span>
-                </li>
-                <li className="role-bullet-item">
-                  <CheckCircle2 size={16} className="role-bullet-icon" style={{ color: '#E9A6C7' }} />
-                  <span>Manage platform data</span>
-                </li>
-              </ul>
-            </div>
-
-            <button className="btn btn-secondary" style={{ width: '100%' }} onClick={() => handleLoginClick('admin')}>
-              <span>Login as Admin</span>
               <ArrowRight size={14} />
             </button>
           </div>

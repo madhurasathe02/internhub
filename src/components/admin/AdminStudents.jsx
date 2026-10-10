@@ -59,16 +59,7 @@ export default function AdminStudents() {
 
       <div className="card">
         {/* Search & Filter Toolbar */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '12px', 
-          flexWrap: 'wrap', 
-          alignItems: 'center', 
-          justify: 'space-between',
-          marginBottom: '20px',
-          paddingBottom: '16px',
-          borderBottom: '1px solid #E5E2F0' 
-        }}>
+        <div className="filter-toolbar" style={{ marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid #E5E2F0' }}>
           <SearchBar 
             value={searchQuery} 
             onChange={setSearchQuery} 
@@ -76,7 +67,7 @@ export default function AdminStudents() {
             style={{ maxWidth: '340px' }}
           />
 
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="filter-controls">
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#77758A', fontSize: '0.84rem', fontWeight: 600 }}>
               <Filter size={14} />
               <span>Filters:</span>
@@ -183,7 +174,7 @@ export default function AdminStudents() {
                 <label className="form-label">Assigned Company / Partner</label>
                 <input type="text" className="form-input" value={company} onChange={e => setCompany(e.target.value)} />
               </div>
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+              <div className="btn-group-responsive" style={{ justifyContent: 'flex-end', marginTop: '20px' }}>
                 <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Add Student</button>
               </div>

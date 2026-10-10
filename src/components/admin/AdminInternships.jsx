@@ -62,7 +62,7 @@ export default function AdminInternships() {
       </div>
 
       {/* Search & Filter Controls */}
-      <div className="card" style={{ padding: '16px 20px', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+      <div className="card filter-toolbar">
         <SearchBar 
           value={searchQuery} 
           onChange={setSearchQuery} 
@@ -70,7 +70,7 @@ export default function AdminInternships() {
           style={{ maxWidth: '360px' }}
         />
 
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div className="filter-controls">
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#77758A', fontSize: '0.84rem', fontWeight: 600 }}>
             <Filter size={14} />
             <span>Status:</span>
@@ -97,7 +97,7 @@ export default function AdminInternships() {
           description="No programs match your search term or status filter."
         />
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+        <div className="dashboard-grid-2">
           {filteredInternships.map(program => (
             <div key={program.id} className="card soft-card-hover" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
@@ -177,7 +177,7 @@ export default function AdminInternships() {
                   onChange={e => setDescription(e.target.value)}
                 />
               </div>
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}>
+              <div className="btn-group-responsive" style={{ justifyContent: 'flex-end', marginTop: '16px' }}>
                 <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Create Track</button>
               </div>

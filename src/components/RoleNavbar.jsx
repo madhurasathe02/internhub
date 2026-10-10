@@ -224,8 +224,9 @@ export default function RoleNavbar({ onToggleMobileSidebar, isMobileSidebarOpen 
 
         {/* Sign Out Button - Matching Uploaded Photo Pink Pill */}
         <button 
-          className="btn btn-outline btn-sm" 
+          className="btn btn-outline btn-sm btn-signout" 
           onClick={handleLogout} 
+          title="Sign Out"
           style={{ 
             color: '#EC4899', 
             borderColor: 'rgba(244, 114, 182, 0.35)',

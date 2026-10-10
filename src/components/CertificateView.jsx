@@ -46,7 +46,7 @@ export default function CertificateView({ certificate, onDownload = null }) {
         <div style={{ position: 'absolute', bottom: '16px', right: '16px', borderBottom: '3px solid #8B7CF6', borderRight: '3px solid #8B7CF6', width: '32px', height: '32px' }} />
 
         {/* Certificate Inner Card */}
-        <div style={{
+        <div className="certificate-inner" style={{
           backgroundColor: '#FFFFFF',
           border: '1px solid #DDD8F2',
           borderRadius: '12px',
@@ -76,7 +76,7 @@ export default function CertificateView({ certificate, onDownload = null }) {
               INTERNHUB ACADEMIC PORTAL
             </div>
             
-            <h1 style={{ 
+            <h1 className="cert-header-title" style={{ 
               fontSize: '2rem', 
               fontWeight: 800, 
               color: '#29283A', 
@@ -96,7 +96,7 @@ export default function CertificateView({ certificate, onDownload = null }) {
           </p>
 
           {/* Recipient Name */}
-          <div style={{ 
+          <div className="cert-recipient-name" style={{ 
             fontSize: '2.25rem', 
             fontWeight: 800, 
             color: '#6D61D9', 
@@ -167,7 +167,7 @@ export default function CertificateView({ certificate, onDownload = null }) {
           </div>
 
           {/* Dual Signatures & Verification Stamp */}
-          <div style={{ 
+          <div className="cert-sign-grid" style={{ 
             display: 'flex', 
             justify: 'space-between', 
             alignItems: 'flex-end', 

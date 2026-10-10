@@ -137,7 +137,7 @@ export default function InternFeedback() {
       </div>
 
       {/* Tabs Switcher */}
-      <div style={{ display: 'flex', borderBottom: '2px solid #E5E2F0', gap: '16px' }}>
+      <div style={{ display: 'flex', borderBottom: '2px solid #E5E2F0', gap: '16px', overflowX: 'auto', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch', paddingBottom: '2px' }}>
         <button
           onClick={() => setActiveTab('received')}
           style={{
@@ -529,7 +529,7 @@ export default function InternFeedback() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div className="btn-group-responsive" style={{ justifyContent: 'flex-end', gap: '10px' }}>
               {selectedSubmissionForModal.status === 'Changes Requested' && (
                 <button 
                   className="btn btn-warning"

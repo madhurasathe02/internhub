@@ -70,7 +70,7 @@ export default function AdminOverview() {
       </div>
 
       {/* 7 Summary Cards Grid (Matching Soft Pastel Glass Card Style) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '16px' }}>
+      <div className="stat-cards-grid">
         {/* Card 1: Total Interns */}
         <div 
           onClick={() => navigate('/admin/students')}
@@ -88,7 +88,7 @@ export default function AdminOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#E5DCFF', color: '#6C47FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -96,7 +96,7 @@ export default function AdminOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{totalInterns}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{totalInterns}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Total Interns</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Active student cohort</div>
           </div>
@@ -124,7 +124,7 @@ export default function AdminOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D6F0FF', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -132,7 +132,7 @@ export default function AdminOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{totalMentors}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{totalMentors}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Total Mentors</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Faculty & Industry</div>
           </div>
@@ -160,7 +160,7 @@ export default function AdminOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D1FAE5', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -168,7 +168,7 @@ export default function AdminOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{activeInternships}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{activeInternships}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Active Internships</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Ongoing tracks</div>
           </div>
@@ -196,7 +196,7 @@ export default function AdminOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#EDE5FF', color: '#8B5CF6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -204,7 +204,7 @@ export default function AdminOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{totalProjects}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{totalProjects}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Total Projects</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Industry assignments</div>
           </div>
@@ -232,7 +232,7 @@ export default function AdminOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFE0EC', color: '#EC4899', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -240,7 +240,7 @@ export default function AdminOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingSubmissions}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingSubmissions}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Pending Submissions</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Awaiting evaluation</div>
           </div>
@@ -268,7 +268,7 @@ export default function AdminOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#CCFBF1', color: '#14B8A6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -276,7 +276,7 @@ export default function AdminOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{completedInternships}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{completedInternships}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Completed Internships</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Graduated cohorts</div>
           </div>
@@ -304,7 +304,7 @@ export default function AdminOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFEDD5', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -312,7 +312,7 @@ export default function AdminOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{certificatesIssued}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{certificatesIssued}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Certificates Issued</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Verified credentials</div>
           </div>
@@ -325,21 +325,21 @@ export default function AdminOverview() {
       </div>
 
       {/* Middle Grid: Internship Overview & Submission Overview */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+      <div className="dashboard-grid-2">
         {/* Internship Overview */}
         <div className="card">
           <div className="card-header">
             <div>
               <h3 className="card-title">Internship Track Overview</h3>
               <p style={{ fontSize: '0.8125rem', color: '#77758A', marginTop: '2px' }}>
-                Distribution across program execution states
+                 Distribution across program execution states
               </p>
             </div>
             <TrendingUp size={18} style={{ color: '#8B7CF6' }} />
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', textAlign: 'center' }}>
+            <div className="overview-subgrid-3">
               <div 
                 className="soft-card-hover" 
                 onClick={() => navigate('/admin/internships')}
@@ -393,15 +393,15 @@ export default function AdminOverview() {
             <FileCheck2 size={18} style={{ color: '#8B7CF6' }} />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+          <div className="overview-subgrid-4">
             <div 
               className="soft-card-hover" 
               onClick={() => navigate('/admin/tasks')}
               style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(255, 242, 235, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#D97706', textTransform: 'uppercase' }}>Submitted</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#B45309', margin: '4px 0' }}>{submissionBreakdown.submitted}</div>
-              <div style={{ fontSize: '0.75rem', color: '#D97706' }}>Awaiting initial review</div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#D97706', textTransform: 'uppercase' }}>Submitted</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#B45309', margin: '4px 0' }}>{submissionBreakdown.submitted}</div>
+              <div style={{ fontSize: '0.72rem', color: '#D97706' }}>Awaiting review</div>
             </div>
 
             <div 
@@ -409,9 +409,9 @@ export default function AdminOverview() {
               onClick={() => navigate('/admin/tasks')}
               style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(230, 245, 255, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2563EB', textTransform: 'uppercase' }}>Under Review</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1D4ED8', margin: '4px 0' }}>{submissionBreakdown.underReview}</div>
-              <div style={{ fontSize: '0.75rem', color: '#2563EB' }}>Mentor evaluation active</div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#2563EB', textTransform: 'uppercase' }}>Under Review</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1D4ED8', margin: '4px 0' }}>{submissionBreakdown.underReview}</div>
+              <div style={{ fontSize: '0.72rem', color: '#2563EB' }}>Mentor active</div>
             </div>
 
             <div 
@@ -419,9 +419,9 @@ export default function AdminOverview() {
               onClick={() => navigate('/admin/tasks')}
               style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(230, 250, 240, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#16A34A', textTransform: 'uppercase' }}>Approved</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#15803D', margin: '4px 0' }}>{submissionBreakdown.approved}</div>
-              <div style={{ fontSize: '0.75rem', color: '#16A34A' }}>Successfully verified</div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#16A34A', textTransform: 'uppercase' }}>Approved</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#15803D', margin: '4px 0' }}>{submissionBreakdown.approved}</div>
+              <div style={{ fontSize: '0.72rem', color: '#16A34A' }}>Verified</div>
             </div>
 
             <div 
@@ -429,16 +429,16 @@ export default function AdminOverview() {
               onClick={() => navigate('/admin/tasks')}
               style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(255, 235, 245, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#DC2626', textTransform: 'uppercase' }}>Changes Requested</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#B91C1C', margin: '4px 0' }}>{submissionBreakdown.changesRequested}</div>
-              <div style={{ fontSize: '0.75rem', color: '#DC2626' }}>Revision needed</div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#DC2626', textTransform: 'uppercase' }}>Changes Req.</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#B91C1C', margin: '4px 0' }}>{submissionBreakdown.changesRequested}</div>
+              <div style={{ fontSize: '0.72rem', color: '#DC2626' }}>Revision needed</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Bottom Grid: Certificate Overview & Recent Activity */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+      <div className="dashboard-grid-2">
         {/* Certificate Overview */}
         <div className="card">
           <div className="card-header">
@@ -452,13 +452,13 @@ export default function AdminOverview() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+            <div className="overview-subgrid-2">
               <div 
                 className="soft-card-hover" 
                 onClick={() => navigate('/admin/certificates')}
-                style={{ padding: '18px', borderRadius: '18px', backgroundColor: 'rgba(255, 242, 235, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' }}
+                style={{ padding: '16px', borderRadius: '18px', backgroundColor: 'rgba(255, 242, 235, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer', boxSizing: 'border-box' }}
               >
-                <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FEF3C7', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FEF3C7', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <AlertTriangle size={22} />
                 </div>
                 <div>
@@ -470,9 +470,9 @@ export default function AdminOverview() {
               <div 
                 className="soft-card-hover" 
                 onClick={() => navigate('/admin/certificates')}
-                style={{ padding: '18px', borderRadius: '18px', backgroundColor: 'rgba(230, 250, 240, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' }}
+                style={{ padding: '16px', borderRadius: '18px', backgroundColor: 'rgba(230, 250, 240, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer', boxSizing: 'border-box' }}
               >
-                <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#DCFCE7', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#DCFCE7', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Award size={22} />
                 </div>
                 <div>

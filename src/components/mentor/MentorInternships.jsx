@@ -132,7 +132,7 @@ export default function MentorInternships() {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div className="btn-responsive-row">
                   <button 
                     className="btn btn-danger btn-sm"
                     onClick={() => rejectEnrollmentRequest(req.id)}
@@ -158,7 +158,7 @@ export default function MentorInternships() {
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="card" style={{ padding: '16px 20px', display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+      <div className="card filter-toolbar">
         <SearchBar 
           value={searchQuery} 
           onChange={setSearchQuery} 
@@ -166,7 +166,7 @@ export default function MentorInternships() {
           style={{ maxWidth: '360px' }}
         />
 
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div className="filter-controls">
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#77758A', fontSize: '0.84rem', fontWeight: 600 }}>
             <Filter size={14} />
             <span>Filter Status:</span>
@@ -194,7 +194,7 @@ export default function MentorInternships() {
           description="No programs match your search query or status filter."
         />
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+        <div className="dashboard-grid-2">
           {filteredInternships.map(program => (
             <div key={program.id} className="card soft-card-hover" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
@@ -315,11 +315,11 @@ export default function MentorInternships() {
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}>
+              <div className="btn-group-responsive" style={{ justifyContent: 'flex-end', marginTop: '16px' }}>
                 <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">
                   <Send size={16} />
-                  <span>Publish Internship Track</span>
+                  <span>Publish Track</span>
                 </button>
               </div>
             </form>

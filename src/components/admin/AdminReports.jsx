@@ -31,31 +31,31 @@ export default function AdminReports() {
       </div>
 
       {/* Analytics KPI Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
-        <div className="card">
+      <div className="stat-cards-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+        <div className="card stat-card-item">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#8B7CF6' }}>
             <Award size={20} />
             <h3 className="card-title" style={{ margin: 0, fontSize: '0.875rem' }}>Evaluations Completed</h3>
           </div>
-          <div style={{ fontSize: '2.25rem', fontWeight: 800, color: '#6D61D9' }}>{totalEvals} Students</div>
+          <div className="metric-number" style={{ fontSize: '2.25rem', fontWeight: 800, color: '#6D61D9' }}>{totalEvals} Students</div>
           <p style={{ fontSize: '0.84rem', color: '#77758A', marginTop: '4px' }}>Supervisor ratings recorded in active session.</p>
         </div>
 
-        <div className="card">
+        <div className="card stat-card-item">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#4F9D69' }}>
             <Star size={20} fill="#4F9D69" />
             <h3 className="card-title" style={{ margin: 0, fontSize: '0.875rem' }}>Cohort Mean Score</h3>
           </div>
-          <div style={{ fontSize: '2.25rem', fontWeight: 800, color: '#4F9D69' }}>{avgCohortScore} / 5.0</div>
+          <div className="metric-number" style={{ fontSize: '2.25rem', fontWeight: 800, color: '#4F9D69' }}>{avgCohortScore} / 5.0</div>
           <p style={{ fontSize: '0.84rem', color: '#77758A', marginTop: '4px' }}>Average score across all 6 skill categories.</p>
         </div>
 
-        <div className="card">
+        <div className="card stat-card-item">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#7CA9F8' }}>
             <CheckCircle2 size={20} />
             <h3 className="card-title" style={{ margin: 0, fontSize: '0.875rem' }}>Submission Compliance</h3>
           </div>
-          <div style={{ fontSize: '2.25rem', fontWeight: 800, color: '#7CA9F8' }}>96.5%</div>
+          <div className="metric-number" style={{ fontSize: '2.25rem', fontWeight: 800, color: '#7CA9F8' }}>96.5%</div>
           <p style={{ fontSize: '0.84rem', color: '#77758A', marginTop: '4px' }}>Evaluated deliverables on-time completion rate.</p>
         </div>
       </div>

@@ -200,12 +200,12 @@ export default function EvaluationModal({ isOpen, onClose, student = null, exist
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+            <div className="btn-group-responsive" style={{ justifyContent: 'flex-end', marginTop: '20px' }}>
               <button type="button" className="btn btn-outline" onClick={onClose}>
                 Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                <span>Submit Performance Evaluation</span>
+                <span>Submit Evaluation</span>
               </button>
             </div>
           </form>

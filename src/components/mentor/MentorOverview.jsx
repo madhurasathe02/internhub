@@ -75,7 +75,7 @@ export default function MentorOverview() {
       </div>
 
       {/* 6 Summary Cards Grid (Matching Soft Pastel Glass Card Style) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '16px' }}>
+      <div className="stat-cards-grid">
         {/* 1. My Interns */}
         <div 
           onClick={() => navigate('/mentor/interns')}
@@ -93,7 +93,7 @@ export default function MentorOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#E5DCFF', color: '#6C47FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -101,7 +101,7 @@ export default function MentorOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{myInternsCount}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{myInternsCount}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>My Interns</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Assigned cohort</div>
           </div>
@@ -129,7 +129,7 @@ export default function MentorOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D6F0FF', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -137,7 +137,7 @@ export default function MentorOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{activeProjectsCount}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{activeProjectsCount}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Active Projects</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Supervised projects</div>
           </div>
@@ -165,7 +165,7 @@ export default function MentorOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFE0EC', color: '#EC4899', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -173,7 +173,7 @@ export default function MentorOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingTasksCount}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{pendingTasksCount}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Pending Tasks</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>In progress</div>
           </div>
@@ -201,7 +201,7 @@ export default function MentorOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#FFEDD5', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -209,7 +209,7 @@ export default function MentorOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{submissionsToReviewCount}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{submissionsToReviewCount}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Submissions to Review</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Needs evaluation</div>
           </div>
@@ -237,7 +237,7 @@ export default function MentorOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#D1FAE5', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -245,7 +245,7 @@ export default function MentorOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{approvedSubmissionsCount}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{approvedSubmissionsCount}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Approved Submissions</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Accepted deliverables</div>
           </div>
@@ -273,7 +273,7 @@ export default function MentorOverview() {
             cursor: 'pointer',
             transition: 'transform 0.2s ease, boxShadow 0.2s ease'
           }}
-          className="soft-card-hover"
+          className="soft-card-hover stat-card-item"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ width: '42px', height: '42px', borderRadius: '14px', backgroundColor: '#EDE5FF', color: '#8B5CF6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -281,7 +281,7 @@ export default function MentorOverview() {
             </div>
           </div>
           <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{evaluationsCompletedCount}</div>
+            <div className="metric-number" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#1E1B3A', lineHeight: 1 }}>{evaluationsCompletedCount}</div>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E1B3A', marginTop: '6px' }}>Evaluations Completed</div>
             <div style={{ fontSize: '0.75rem', color: '#79759B', marginTop: '2px' }}>Student performance</div>
           </div>
@@ -294,7 +294,7 @@ export default function MentorOverview() {
       </div>
 
       {/* Submission Review Overview & Recent Activity */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+      <div className="dashboard-grid-2">
         {/* Submission Review Overview */}
         <div className="card">
           <div className="card-header">
@@ -307,7 +307,7 @@ export default function MentorOverview() {
             <FileCheck2 size={18} style={{ color: '#8B7CF6' }} />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+          <div className="overview-subgrid-4">
             <div 
               className="soft-card-hover"
               style={{ padding: '14px', borderRadius: '16px', backgroundColor: 'rgba(255, 242, 235, 0.75)', border: '1px solid rgba(255, 255, 255, 0.9)', cursor: 'pointer' }}
@@ -614,7 +614,7 @@ export default function MentorOverview() {
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '24px' }}>
+            <div className="btn-group-responsive" style={{ justifyContent: 'flex-end', marginTop: '24px' }}>
               <button 
                 className="btn btn-danger"
                 onClick={() => handleReviewAction(selectedSubmission.id, 'Changes Requested')}

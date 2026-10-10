@@ -45,16 +45,7 @@ export default function MentorCertificates() {
 
       <div className="card">
         {/* Search & Filter Toolbar */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '12px', 
-          flexWrap: 'wrap', 
-          alignItems: 'center', 
-          justify: 'space-between',
-          marginBottom: '20px',
-          paddingBottom: '16px',
-          borderBottom: '1px solid #E5E2F0' 
-        }}>
+        <div className="filter-toolbar" style={{ marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid #E5E2F0' }}>
           <SearchBar 
             value={searchQuery} 
             onChange={setSearchQuery} 
@@ -62,7 +53,7 @@ export default function MentorCertificates() {
             style={{ maxWidth: '340px' }}
           />
 
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div className="filter-controls">
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#77758A', fontSize: '0.84rem', fontWeight: 600 }}>
               <Filter size={14} />
               <span>Certificate Status:</span>

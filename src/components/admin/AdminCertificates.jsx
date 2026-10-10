@@ -42,13 +42,13 @@ export default function AdminCertificates() {
       </div>
 
       {/* KPI Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+      <div className="stat-cards-grid">
         <div className="card">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#8B7CF6' }}>
             <Award size={20} />
             <h3 className="card-title" style={{ margin: 0, fontSize: '0.875rem' }}>Total Certificates Record</h3>
           </div>
-          <div style={{ fontSize: '2.25rem', fontWeight: 800, color: '#6D61D9' }}>{certificates.length} Total</div>
+          <div className="metric-number" style={{ fontSize: '2.25rem', fontWeight: 800, color: '#6D61D9' }}>{certificates.length} Total</div>
           <p style={{ fontSize: '0.84rem', color: '#77758A', marginTop: '4px' }}>Registered intern certificate profiles.</p>
         </div>
 
@@ -57,7 +57,7 @@ export default function AdminCertificates() {
             <Clock size={20} />
             <h3 className="card-title" style={{ margin: 0, fontSize: '0.875rem' }}>Pending Verification</h3>
           </div>
-          <div style={{ fontSize: '2.25rem', fontWeight: 800, color: '#B98532' }}>{pendingCount} Pending</div>
+          <div className="metric-number" style={{ fontSize: '2.25rem', fontWeight: 800, color: '#B98532' }}>{pendingCount} Pending</div>
           <p style={{ fontSize: '0.84rem', color: '#77758A', marginTop: '4px' }}>Awaiting admin signature and verification.</p>
         </div>
 
@@ -66,7 +66,7 @@ export default function AdminCertificates() {
             <ShieldCheck size={20} />
             <h3 className="card-title" style={{ margin: 0, fontSize: '0.875rem' }}>Issued Credentials</h3>
           </div>
-          <div style={{ fontSize: '2.25rem', fontWeight: 800, color: '#4F9D69' }}>{issuedCount} Issued</div>
+          <div className="metric-number" style={{ fontSize: '2.25rem', fontWeight: 800, color: '#4F9D69' }}>{issuedCount} Issued</div>
           <p style={{ fontSize: '0.84rem', color: '#77758A', marginTop: '4px' }}>Verified & available for student download.</p>
         </div>
       </div>
@@ -74,24 +74,14 @@ export default function AdminCertificates() {
       {/* Certificates Management Table */}
       <div className="card">
         {/* Search & Filter Toolbar */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '12px', 
-          flexWrap: 'wrap', 
-          alignItems: 'center', 
-          justify: 'space-between',
-          marginBottom: '20px',
-          paddingBottom: '16px',
-          borderBottom: '1px solid #E5E2F0' 
-        }}>
+        <div className="filter-toolbar">
           <SearchBar 
             value={searchQuery} 
             onChange={setSearchQuery} 
             placeholder="Search by intern name or certificate ID..." 
-            style={{ maxWidth: '340px' }}
           />
 
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div className="filter-controls">
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#77758A', fontSize: '0.84rem', fontWeight: 600 }}>
               <Filter size={14} />
               <span>Status:</span>
@@ -101,7 +91,7 @@ export default function AdminCertificates() {
               className="form-input" 
               value={selectedStatus}
               onChange={e => setSelectedStatus(e.target.value)}
-              style={{ width: 'auto', minWidth: '160px', height: '38px', padding: '0 12px', fontSize: '0.84rem', borderRadius: '10px' }}
+              style={{ width: 'auto', minWidth: '150px', height: '38px', padding: '0 12px', fontSize: '0.84rem', borderRadius: '10px' }}
             >
               <option value="All">All Statuses</option>
               <option value="pending">Pending Verification</option>

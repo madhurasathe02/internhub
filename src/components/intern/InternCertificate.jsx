@@ -58,7 +58,7 @@ export default function InternCertificate() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div className="btn-group-responsive">
               <button 
                 className="btn btn-secondary"
                 onClick={() => setShowModal(true)}
@@ -79,7 +79,7 @@ export default function InternCertificate() {
           </div>
 
           {/* Certificate Embed */}
-          <div className="card" style={{ padding: '28px', backgroundColor: '#FFFFFF', display: 'flex', justifyContent: 'center' }}>
+          <div className="card" style={{ padding: '20px 14px', backgroundColor: '#FFFFFF', display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
             <CertificateView certificate={cert} />
           </div>
         </div>

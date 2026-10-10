@@ -40,24 +40,14 @@ export default function AdminTasks() {
 
       <div className="card">
         {/* Search & Filter Toolbar */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '12px', 
-          flexWrap: 'wrap', 
-          alignItems: 'center', 
-          justify: 'space-between',
-          marginBottom: '20px',
-          paddingBottom: '16px',
-          borderBottom: '1px solid #E5E2F0' 
-        }}>
+        <div className="filter-toolbar">
           <SearchBar 
             value={searchQuery} 
             onChange={setSearchQuery} 
             placeholder="Search tasks by name..." 
-            style={{ maxWidth: '300px' }}
           />
 
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="filter-controls">
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#77758A', fontSize: '0.84rem', fontWeight: 600 }}>
               <Filter size={14} />
               <span>Filters:</span>
@@ -67,7 +57,7 @@ export default function AdminTasks() {
               className="form-input" 
               value={selectedProject}
               onChange={e => setSelectedProject(e.target.value)}
-              style={{ width: 'auto', minWidth: '150px', height: '38px', padding: '0 12px', fontSize: '0.84rem', borderRadius: '10px' }}
+              style={{ width: 'auto', minWidth: '130px', height: '38px', padding: '0 12px', fontSize: '0.84rem', borderRadius: '10px' }}
             >
               <option value="All">All Projects</option>
               {projectOptions.map(p => (
@@ -79,7 +69,7 @@ export default function AdminTasks() {
               className="form-input" 
               value={selectedIntern}
               onChange={e => setSelectedIntern(e.target.value)}
-              style={{ width: 'auto', minWidth: '140px', height: '38px', padding: '0 12px', fontSize: '0.84rem', borderRadius: '10px' }}
+              style={{ width: 'auto', minWidth: '130px', height: '38px', padding: '0 12px', fontSize: '0.84rem', borderRadius: '10px' }}
             >
               <option value="All">All Interns</option>
               {internOptions.map(i => (

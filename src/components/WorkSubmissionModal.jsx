@@ -179,7 +179,7 @@ export default function WorkSubmissionModal({ isOpen, onClose, targetTask = null
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '24px' }}>
+            <div className="btn-group-responsive" style={{ justifyContent: 'flex-end', marginTop: '24px' }}>
               <button type="button" className="btn btn-outline" onClick={onClose}>
                 Cancel
               </button>

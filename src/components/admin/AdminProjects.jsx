@@ -42,7 +42,7 @@ export default function AdminProjects() {
       </div>
 
       {/* Search & Filter Toolbar */}
-      <div className="card" style={{ padding: '16px 20px', display: 'flex', gap: '12px', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+      <div className="card filter-toolbar">
         <SearchBar 
           value={searchQuery} 
           onChange={setSearchQuery} 
@@ -50,7 +50,7 @@ export default function AdminProjects() {
           style={{ maxWidth: '320px' }}
         />
 
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="filter-controls">
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#77758A', fontSize: '0.84rem', fontWeight: 600 }}>
             <Filter size={14} />
             <span>Filters:</span>
@@ -101,7 +101,7 @@ export default function AdminProjects() {
           description="No projects match your current search terms or filter selection."
         />
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+        <div className="dashboard-grid-2">
           {filteredProjects.map(proj => (
             <div key={proj.id} className="card soft-card-hover">
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
